@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Madeni ya Wateja – UKM Kituo cha Mifugo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --forest:      #1b4332;
+      --forest-mid:  #2d6a4f;
+      --forest-soft: #52b788;
+      --amber:       #d4a017;
+      --amber-light: #f4c945;
+      --cream:       #fdf8f0;
+      --sand:        #e9dcc9;
+      --white:       #ffffff;
+      --text-dark:   #1c1c1c;
+      --text-mid:    #4a4a4a;
+      --danger:      #c0392b;
+      --danger-soft: #fdecea;
+      --success:     #1b8a4b;
+      --success-soft:#e8f5ee;
+      --warning:     #e67e22;
+      --warning-soft:#fef3e2;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--text-dark);
+      overflow-x: hidden;
+    }
+
+    /* ══════════════ HEADER ══════════════ */
+    header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      background: rgba(27, 67, 50, 0.97);
+      backdrop-filter: blur(12px);
+      border-bottom: 2px solid var(--amber);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 36px; height: 82px;
+    }
+    .header-logo { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
+    .logo-circle {
+      width: 56px; height: 56px; border-radius: 50%;
+      border: 2.5px solid var(--amber); background: var(--forest-mid);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; box-shadow: 0 0 0 4px rgba(212,160,23,0.15);
+    }
+    .logo-circle svg { width: 38px; height: 38px; }
+    .header-info { flex: 1; text-align: center; padding: 0 20px; }
+    .header-info h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem; font-weight: 900; color: var(--amber);
+      letter-spacing: 0.05em; line-height: 1.2; text-transform: uppercase;
+    }
+    .header-info .tagline {
+      font-size: 0.66rem; color: rgba(255,255,255,0.7);
+      letter-spacing: 0.12em; margin-top: 3px;
+    }
+    .hamburger {
+      flex-shrink: 0; background: none;
+      border: 2px solid var(--amber); border-radius: 7px;
+      cursor: pointer; padding: 9px 11px;
+      display: flex; flex-direction: column; gap: 5px;
+      transition: background 0.25s;
+    }
+    .hamburger:hover { background: rgba(212,160,23,0.18); }
+    .hamburger span {
+      display: block; width: 24px; height: 2px;
+      background: var(--amber); border-radius: 2px;
+      transition: transform 0.35s, opacity 0.35s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ══════════════ SIDE NAV ══════════════ */
+    .nav-backdrop {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+      z-index: 998; opacity: 0; pointer-events: none;
+      transition: opacity 0.35s;
+    }
+    .nav-backdrop.show { opacity: 1; pointer-events: all; }
+    .side-nav {
+      position: fixed; top: 82px; right: 0;
+      width: 250px; height: calc(100vh - 82px);
+      background: var(--forest); border-left: 2px solid var(--amber);
+      transform: translateX(105%);
+      transition: transform 0.4s cubic-bezier(0.77,0,0.18,1);
+      z-index: 999; display: flex; flex-direction: column;
+      padding: 30px 0; box-shadow: -8px 0 32px rgba(0,0,0,0.35);
+    }
+    .side-nav.open { transform: translateX(0); }
+    .nav-label {
+      font-size: 0.6rem; color: var(--amber);
+      letter-spacing: 0.2em; text-transform: uppercase;
+      padding: 0 30px 18px;
+      border-bottom: 1px solid rgba(212,160,23,0.22); margin-bottom: 10px;
+    }
+    .side-nav a {
+      display: flex; align-items: center; gap: 14px;
+      padding: 15px 30px; color: rgba(255,255,255,0.82);
+      text-decoration: none; font-size: 0.88rem; font-weight: 500;
+      letter-spacing: 0.04em;
+      transition: background 0.2s, color 0.2s, padding-left 0.2s;
+      border-left: 3px solid transparent;
+    }
+    .side-nav a:hover, .side-nav a.active {
+      background: rgba(212,160,23,0.1); color: var(--amber-light);
+      padding-left: 38px; border-left-color: var(--amber);
+    }
+    .side-nav a svg { width: 18px; height: 18px; fill: var(--amber); flex-shrink: 0; }
+
+    /* ══════════════ PAGE WRAPPER ══════════════ */
+    .page-wrapper {
+      margin-top: 82px;
+      padding: 0;
+    }
+
+    /* ══════════════ PAGE HERO BANNER ══════════════ */
+    .page-banner {
+      background: linear-gradient(135deg, var(--forest) 0%, var(--forest-mid) 60%, #1b5e3b 100%);
+      padding: 56px 48px 48px;
+      position: relative; overflow: hidden;
+      border-bottom: 3px solid var(--amber);
+    }
+    .page-banner::before {
+      content: '';
+      position: absolute; top: -60px; right: -60px;
+      width: 320px; height: 320px; border-radius: 50%;
+      background: rgba(212,160,23,0.07);
+      pointer-events: none;
+    }
+    .page-banner::after {
+      content: '';
+      position: absolute; bottom: -80px; left: -40px;
+      width: 240px; height: 240px; border-radius: 50%;
+      background: rgba(82,183,136,0.06);
+      pointer-events: none;
+    }
+    .banner-eyebrow {
+      font-size: 0.65rem; letter-spacing: 0.22em; color: var(--amber);
+      text-transform: uppercase; margin-bottom: 10px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .banner-eyebrow::before {
+      content: ''; width: 28px; height: 2px; background: var(--amber);
+    }
+    .page-banner h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.9rem, 4vw, 3rem); font-weight: 900;
+      color: var(--white); line-height: 1.1; margin-bottom: 10px;
+    }
+    .page-banner h2 em { color: var(--amber-light); font-style: italic; }
+    .page-banner p {
+      color: rgba(255,255,255,0.72); font-size: 0.92rem; max-width: 520px; line-height: 1.7;
+    }
+
+    /* ══════════════ SUMMARY CARDS ══════════════ */
+    .summary-strip {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 0; background: var(--white);
+      border-bottom: 2px solid var(--sand);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+    }
+    .summary-card {
+      padding: 28px 32px;
+      border-right: 1px solid var(--sand);
+      position: relative; overflow: hidden;
+      transition: background 0.25s;
+    }
+    .summary-card:last-child { border-right: none; }
+    .summary-card::before {
+      content: ''; position: absolute;
+      bottom: 0; left: 0; right: 0; height: 3px;
+    }
+    .summary-card.total::before { background: var(--amber); }
+    .summary-card.unpaid::before { background: var(--danger); }
+    .summary-card.partial::before { background: var(--warning); }
+    .summary-card.paid::before { background: var(--success); }
+    .summary-label {
+      font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.14em;
+      color: var(--text-mid); margin-bottom: 10px; font-weight: 600;
+    }
+    .summary-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem; font-weight: 700; color: var(--text-dark);
+      line-height: 1;
+    }
+    .summary-value.red { color: var(--danger); }
+    .summary-value.orange { color: var(--warning); }
+    .summary-value.green { color: var(--success); }
+    .summary-sub { font-size: 0.72rem; color: var(--text-mid); margin-top: 4px; }
+
+    /* ══════════════ MAIN CONTENT ══════════════ */
+    .content-area {
+      max-width: 1300px; margin: 0 auto;
+      padding: 40px 32px 60px;
+    }
+
+    /* ══════════════ TOOLBAR ══════════════ */
+    .toolbar {
+      display: flex; align-items: center; gap: 16px;
+      flex-wrap: wrap; margin-bottom: 32px;
+    }
+    .search-wrap {
+      flex: 1; min-width: 220px; position: relative;
+    }
+    .search-wrap svg {
+      position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+      width: 17px; height: 17px; fill: var(--text-mid); pointer-events: none;
+    }
+    .search-wrap input {
+      width: 100%; padding: 12px 16px 12px 44px;
+      border: 1.5px solid var(--sand); border-radius: 8px;
+      font-family: 'DM Sans', sans-serif; font-size: 0.88rem;
+      background: var(--white); color: var(--text-dark);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+    .search-wrap input:focus {
+      border-color: var(--forest-mid);
+      box-shadow: 0 0 0 3px rgba(45,106,79,0.12);
+    }
+    .filter-select {
+      padding: 12px 16px; border: 1.5px solid var(--sand); border-radius: 8px;
+      font-family: 'DM Sans', sans-serif; font-size: 0.86rem;
+      background: var(--white); color: var(--text-dark); cursor: pointer;
+      outline: none; transition: border-color 0.2s;
+    }
+    .filter-select:focus { border-color: var(--forest-mid); }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 22px; border-radius: 8px; border: none;
+      font-family: 'DM Sans', sans-serif; font-size: 0.86rem;
+      font-weight: 600; cursor: pointer; transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .btn-primary {
+      background: var(--forest); color: var(--white);
+    }
+    .btn-primary:hover { background: var(--forest-mid); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(27,67,50,0.3); }
+    .btn-amber {
+      background: var(--amber); color: var(--forest);
+    }
+    .btn-amber:hover { background: var(--amber-light); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(212,160,23,0.3); }
+    .btn-outline {
+      background: transparent; color: var(--forest);
+      border: 1.5px solid var(--forest);
+    }
+    .btn-outline:hover { background: var(--forest); color: var(--white); }
+
+    /* ══════════════ TABLE ══════════════ */
+    .table-card {
+      background: var(--white); border-radius: 14px;
+      border: 1px solid var(--sand);
+      box-shadow: 0 2px 24px rgba(0,0,0,0.06);
+      overflow: hidden;
+    }
+    .table-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 22px 28px; border-bottom: 1px solid var(--sand);
+    }
+    .table-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem; font-weight: 700; color: var(--forest);
+    }
+    .record-count {
+      font-size: 0.78rem; color: var(--text-mid);
+      background: var(--cream); border: 1px solid var(--sand);
+      padding: 4px 12px; border-radius: 20px;
+    }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    thead tr { background: #f8f5f0; }
+    thead th {
+      padding: 14px 18px; text-align: left;
+      font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.14em;
+      color: var(--text-mid); font-weight: 700;
+      border-bottom: 2px solid var(--sand); white-space: nowrap;
+      cursor: pointer; user-select: none;
+    }
+    thead th:hover { color: var(--forest); }
+    thead th .sort-icon { margin-left: 4px; opacity: 0.5; }
+    tbody tr {
+      border-bottom: 1px solid #f2ede6;
+      transition: background 0.15s;
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: #faf8f4; }
+    td {
+      padding: 16px 18px; font-size: 0.87rem; color: var(--text-dark);
+      vertical-align: middle;
+    }
+    .td-name { font-weight: 600; }
+    .td-phone { color: var(--text-mid); font-size: 0.82rem; }
+    .td-amount { font-family: 'Playfair Display', serif; font-weight: 700; }
+    .td-amount.red { color: var(--danger); }
+    .td-amount.orange { color: var(--warning); }
+    .td-amount.green { color: var(--success); }
+
+    .badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 12px; border-radius: 20px;
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.05em;
+    }
+    .badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; }
+    .badge-unpaid { background: var(--danger-soft); color: var(--danger); }
+    .badge-unpaid::before { background: var(--danger); }
+    .badge-partial { background: var(--warning-soft); color: var(--warning); }
+    .badge-partial::before { background: var(--warning); }
+    .badge-paid { background: var(--success-soft); color: var(--success); }
+    .badge-paid::before { background: var(--success); }
+
+    .action-btn {
+      background: none; border: 1px solid var(--sand);
+      border-radius: 6px; cursor: pointer; padding: 6px 8px;
+      color: var(--text-mid); transition: all 0.2s;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .action-btn svg { width: 15px; height: 15px; fill: currentColor; }
+    .action-btn:hover { background: var(--forest); color: var(--white); border-color: var(--forest); }
+    .action-btn.danger:hover { background: var(--danger); border-color: var(--danger); color: var(--white); }
+
+    .empty-state {
+      text-align: center; padding: 64px 32px;
+      color: var(--text-mid);
+    }
+    .empty-state svg { width: 56px; height: 56px; fill: var(--sand); margin-bottom: 16px; }
+    .empty-state p { font-size: 0.92rem; }
+
+    /* ══════════════ LOADING STATE ══════════════ */
+    .loading-row td {
+      text-align: center; padding: 48px;
+      color: var(--text-mid); font-size: 0.9rem;
+    }
+    .spinner {
+      display: inline-block; width: 22px; height: 22px;
+      border: 3px solid var(--sand); border-top-color: var(--forest);
+      border-radius: 50%; animation: spin 0.75s linear infinite;
+      vertical-align: middle; margin-right: 10px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ══════════════ MODAL ══════════════ */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.55); backdrop-filter: blur(4px);
+      z-index: 2000; display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.3s;
+      padding: 20px;
+    }
+    .modal-overlay.show { opacity: 1; pointer-events: all; }
+    .modal {
+      background: var(--white); border-radius: 18px;
+      width: 100%; max-width: 680px;
+      max-height: 90vh; overflow-y: auto;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.35);
+      transform: translateY(24px) scale(0.97);
+      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+      border-top: 4px solid var(--amber);
+    }
+    .modal-overlay.show .modal { transform: translateY(0) scale(1); }
+    .modal-head {
+      padding: 28px 32px 20px;
+      border-bottom: 1px solid var(--sand);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .modal-head h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem; font-weight: 700; color: var(--forest);
+    }
+    .modal-close {
+      background: none; border: none; cursor: pointer;
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-mid); transition: background 0.2s, color 0.2s;
+      font-size: 1.2rem;
+    }
+    .modal-close:hover { background: var(--cream); color: var(--danger); }
+    .modal-body { padding: 28px 32px; }
+
+    /* ══════════════ FORM ══════════════ */
+    .form-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 18px 24px;
+    }
+    .form-group { display: flex; flex-direction: column; gap: 7px; }
+    .form-group.full { grid-column: 1 / -1; }
+    .form-group label {
+      font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.1em; color: var(--text-mid);
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      padding: 12px 16px; border: 1.5px solid var(--sand);
+      border-radius: 8px; font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem; color: var(--text-dark);
+      background: var(--white); outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--forest-mid);
+      box-shadow: 0 0 0 3px rgba(45,106,79,0.12);
+    }
+    .form-group textarea { resize: vertical; min-height: 90px; }
+    .form-section-label {
+      grid-column: 1 / -1;
+      font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.18em;
+      color: var(--amber); font-weight: 700;
+      padding-bottom: 8px; border-bottom: 1px solid var(--sand);
+      margin-top: 8px;
+    }
+
+    .modal-foot {
+      padding: 20px 32px 28px;
+      display: flex; justify-content: flex-end; gap: 12px;
+      border-top: 1px solid var(--sand);
+    }
+
+    /* ══════════════ VIEW MODAL ══════════════ */
+    .detail-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 16px 24px;
+    }
+    .detail-item { display: flex; flex-direction: column; gap: 4px; }
+    .detail-item.full { grid-column: 1 / -1; }
+    .detail-label {
+      font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.12em;
+      color: var(--text-mid); font-weight: 600;
+    }
+    .detail-value {
+      font-size: 0.96rem; color: var(--text-dark);
+      font-weight: 500; line-height: 1.5;
+    }
+    .detail-value.big {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem; font-weight: 700;
+    }
+    .detail-divider {
+      grid-column: 1 / -1; height: 1px;
+      background: var(--sand); margin: 8px 0;
+    }
+
+    /* ══════════════ TOAST ══════════════ */
+    .toast-container {
+      position: fixed; bottom: 28px; right: 28px;
+      z-index: 3000; display: flex; flex-direction: column; gap: 10px;
+    }
+    .toast {
+      background: var(--forest); color: var(--white);
+      padding: 14px 20px; border-radius: 10px;
+      font-size: 0.87rem; max-width: 320px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+      display: flex; align-items: center; gap: 10px;
+      animation: toastIn 0.35s cubic-bezier(0.34,1.56,0.64,1);
+      border-left: 4px solid var(--amber);
+    }
+    .toast.error { background: var(--danger); border-left-color: #ff8b81; }
+    .toast svg { width: 18px; height: 18px; fill: currentColor; flex-shrink: 0; }
+    @keyframes toastIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to   { transform: translateX(0);   opacity: 1; }
+    }
+
+    /* ══════════════ STATUS CONFIG ══════════════ */
+    .config-bar {
+      background: var(--white); border: 1px solid var(--sand);
+      border-radius: 10px; padding: 14px 22px;
+      display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .config-label {
+      font-size: 0.73rem; color: var(--text-mid); font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.1em;
+    }
+    .config-input {
+      flex: 1; min-width: 220px; padding: 8px 14px;
+      border: 1.5px solid var(--sand); border-radius: 7px;
+      font-family: 'DM Sans', sans-serif; font-size: 0.84rem;
+      outline: none; transition: border-color 0.2s;
+    }
+    .config-input:focus { border-color: var(--forest-mid); }
+    .config-info {
+      font-size: 0.75rem; color: var(--text-mid);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .config-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--success); display: inline-block;
+    }
+    .config-dot.disconnected { background: var(--danger); }
+
+    /* ══════════════ PAGINATION ══════════════ */
+    .pagination {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 28px; border-top: 1px solid var(--sand);
+      flex-wrap: wrap; gap: 12px;
+    }
+    .page-info { font-size: 0.8rem; color: var(--text-mid); }
+    .page-btns { display: flex; gap: 6px; }
+    .page-btn {
+      width: 34px; height: 34px; border-radius: 7px;
+      border: 1.5px solid var(--sand); background: var(--white);
+      cursor: pointer; font-size: 0.84rem; font-family: 'DM Sans', sans-serif;
+      color: var(--text-dark); transition: all 0.15s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .page-btn:hover, .page-btn.active {
+      background: var(--forest); color: var(--white); border-color: var(--forest);
+    }
+    .page-btn:disabled { opacity: 0.38; cursor: not-allowed; }
+
+    /* ══════════════ RESPONSIVE ══════════════ */
+    @media (max-width: 900px) {
+      header { padding: 0 18px; }
+      .page-banner { padding: 36px 24px 32px; }
+      .summary-strip { grid-template-columns: 1fr 1fr; }
+      .summary-card { border-bottom: 1px solid var(--sand); }
+      .content-area { padding: 24px 16px 40px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .detail-grid { grid-template-columns: 1fr; }
+      .form-group.full { grid-column: unset; }
+    }
+    @media (max-width: 600px) {
+      .summary-strip { grid-template-columns: 1fr; }
+      .header-info h1 { font-size: 1rem; }
+      .modal-body { padding: 20px; }
+      .modal-head, .modal-foot { padding: 18px 20px; }
+    }
+
+    /* ══════════════ PRINT ══════════════ */
+    @media print {
+      header, .toolbar, .config-bar, .modal-overlay, .toast-container,
+      .side-nav, .nav-backdrop, .pagination .page-btns { display: none !important; }
+      .page-wrapper { margin-top: 0 !important; }
+      .table-card { box-shadow: none !important; border: 1px solid #ccc; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-logo">
+    <div class="logo-circle">
+      <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="24" cy="30" rx="10" ry="7" fill="#52b788"/>
+        <ellipse cx="24" cy="20" rx="7" ry="9" fill="#52b788"/>
+        <circle cx="24" cy="13" r="5" fill="#d4a017"/>
+        <path d="M18 26 Q12 22 14 16" stroke="#d4a017" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M30 26 Q36 22 34 16" stroke="#d4a017" stroke-width="2" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div>
+      <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:900;color:var(--amber);letter-spacing:.04em">UKM</div>
+      <div style="font-size:.6rem;color:rgba(255,255,255,.65);letter-spacing:.1em">Kituo cha Mifugo</div>
+    </div>
+  </div>
+
+  <div class="header-info">
+    <h1>Madeni ya Wateja</h1>
+    <div class="tagline">USIMAMIZI WA MADENI · UKM KITUO CHA MIFUGO · SONGEA, RUVUMA</div>
+  </div>
+
+  <button class="hamburger" id="menuBtn" aria-label="Menyu">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<div class="nav-backdrop" id="backdrop"></div>
+<nav class="side-nav" id="sideNav">
+  <div class="nav-label">Urambazaji</div>
+  <a href="index.html">
+    <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+    Ukurasa Mkuu
+  </a>
+  <a href="inventory.html">
+    <svg viewBox="0 0 24 24"><path d="M20 6h-2.18A3 3 0 0015 4H9a3 3 0 00-2.82 2H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V8a2 2 0 00-2-2zM9 6h6v2H9V6zm11 14H4V8h2v2h2V8h8v2h2V8h2v12z"/></svg>
+    Hifadhi ya Bidhaa
+  </a>
+  <a href="shop.html">
+    <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-1.99.9-1.99 2S15.9 22 17 22s2-.9 2-2-.9-2-2-2zm-9.83-3.25A2 2 0 009 17h8l1.48-2.96A1 1 0 0017.56 13H7.21l-.94-2H3V9h1.73L7 15.75z"/></svg>
+    Duka
+  </a>
+  <a href="customer.html">
+    <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+    Wateja
+  </a>
+  <a href="madeni.html" class="active">
+    <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+    Madeni
+  </a>
+  <a href="sells.html">
+    <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+    Mauzo
+  </a>
+  <a href="report.html">
+    <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
+    Ripoti
+  </a>
+</nav>
+
+<!-- PAGE WRAPPER -->
+<div class="page-wrapper">
+
+  <!-- BANNER -->
+  <div class="page-banner">
+    <div class="banner-eyebrow">Usimamizi wa Fedha</div>
+    <h2>Madeni ya <em>Wateja</em></h2>
+    <p>Fuatilia, rekodi na usimamie madeni ya wateja wako kwa urahisi. Data hifadhiwa salama katika Google Sheets.</p>
+  </div>
+
+  <!-- SUMMARY CARDS -->
+  <div class="summary-strip" id="summaryStrip">
+    <div class="summary-card total">
+      <div class="summary-label">Jumla ya Madeni</div>
+      <div class="summary-value" id="sumTotal">—</div>
+      <div class="summary-sub" id="sumTotalCount">Wateja 0</div>
+    </div>
+    <div class="summary-card unpaid">
+      <div class="summary-label">Hazijalipwa</div>
+      <div class="summary-value red" id="sumUnpaid">—</div>
+      <div class="summary-sub" id="sumUnpaidCount">Wateja 0</div>
+    </div>
+    <div class="summary-card partial">
+      <div class="summary-label">Zimelipwa Sehemu</div>
+      <div class="summary-value orange" id="sumPartial">—</div>
+      <div class="summary-sub" id="sumPartialCount">Wateja 0</div>
+    </div>
+    <div class="summary-card paid">
+      <div class="summary-label">Zimelipwa Zote</div>
+      <div class="summary-value green" id="sumPaid">—</div>
+      <div class="summary-sub" id="sumPaidCount">Wateja 0</div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="content-area">
+
+    <!-- API CONFIG BAR -->
+    <div class="config-bar">
+      <span class="config-label">🔗 Google Sheets API:</span>
+      <input type="text" class="config-input" id="apiUrlInput"
+        placeholder="Weka URL ya Apps Script Web App hapa..."
+        value="https://script.google.com/macros/s/AKfycbwDUbanX9xVjr1Tpp-ChJWWG5nThELBNXAOfNumSnmGhWF6v13ozg7l7mb2n9f1nyr_cw/exec">
+      <button class="btn btn-primary" onclick="saveConfig()" style="padding:8px 18px;font-size:.82rem">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+        Hifadhi
+      </button>
+      <span class="config-info">
+        <span class="config-dot disconnected" id="apiStatusDot"></span>
+        <span id="apiStatusText">Haijaunganishwa</span>
+      </span>
+    </div>
+
+    <!-- TOOLBAR -->
+    <div class="toolbar">
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        <input type="text" id="searchInput" placeholder="Tafuta jina, simu au bidhaa..." oninput="filterTable()">
+      </div>
+      <select class="filter-select" id="statusFilter" onchange="filterTable()">
+        <option value="">Hali Zote</option>
+        <option value="Haijalipiwa">Haijalipiwa</option>
+        <option value="Imelipwa Sehemu">Imelipwa Sehemu</option>
+        <option value="Imelipwa">Imelipwa</option>
+      </select>
+      <button class="btn btn-outline" onclick="loadData()">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+        Onyesha Upya
+      </button>
+      <button class="btn btn-amber" onclick="openAddModal()">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+        Ongeza Deni
+      </button>
+      <button class="btn btn-outline" onclick="window.print()">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>
+        Chapisha
+      </button>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-card">
+      <div class="table-header">
+        <div class="table-title">Orodha ya Madeni</div>
+        <div class="record-count" id="recordCount">Inapakia...</div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th onclick="sortTable('namba')"># <span class="sort-icon">↕</span></th>
+              <th onclick="sortTable('jina')">Jina la Mteja <span class="sort-icon">↕</span></th>
+              <th onclick="sortTable('simu')">Namba ya Simu <span class="sort-icon">↕</span></th>
+              <th onclick="sortTable('bidhaa')">Bidhaa/Huduma <span class="sort-icon">↕</span></th>
+              <th onclick="sortTable('jumla')">Jumla (TZS) <span class="sort-icon">↕</span></th>
+              <th onclick="sortTable('kilicholipwa')">Kilicholipwa <span class="sort-icon">↕</span></th>
+              <th onclick="sortTable('kilichobaki')">Kinachobaki <span class="sort-icon">↕</span></th>
+              <th onclick="sortTable('tarehe')">Tarehe <span class="sort-icon">↕</span></th>
+              <th onclick="sortTable('hali')">Hali <span class="sort-icon">↕</span></th>
+              <th>Vitendo</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+            <tr class="loading-row">
+              <td colspan="10">
+                <span class="spinner"></span>
+                Inaunganika na Google Sheets...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="pagination" id="paginationBar">
+        <div class="page-info" id="pageInfo"></div>
+        <div class="page-btns" id="pageBtns"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ ADD/EDIT MODAL ══════════════ -->
+<div class="modal-overlay" id="formModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="modalTitle">Ongeza Deni Jipya</h3>
+      <button class="modal-close" onclick="closeModal('formModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-section-label">Taarifa za Mteja</div>
+
+        <div class="form-group">
+          <label>Jina Kamili la Mteja *</label>
+          <input type="text" id="fJina" placeholder="mfano: Hamisi Mwalimu" required>
+        </div>
+        <div class="form-group">
+          <label>Namba ya Simu *</label>
+          <input type="tel" id="fSimu" placeholder="mfano: 0744 000 000" required>
+        </div>
+        <div class="form-group full">
+          <label>Anuani / Mtaa</label>
+          <input type="text" id="fAnuani" placeholder="mfano: Mtaa wa Nida, Songea">
+        </div>
+
+        <div class="form-section-label">Taarifa za Deni</div>
+
+        <div class="form-group full">
+          <label>Bidhaa / Huduma Zilizochukuliwa *</label>
+          <input type="text" id="fBidhaa" placeholder="mfano: Dawa ya minyoo, Chanjo ya ng'ombe" required>
+        </div>
+        <div class="form-group">
+          <label>Jumla ya Deni (TZS) *</label>
+          <input type="number" id="fJumla" placeholder="0" min="0" required>
+        </div>
+        <div class="form-group">
+          <label>Kilicholipwa (TZS)</label>
+          <input type="number" id="fKilicholipwa" placeholder="0" min="0" value="0" oninput="calcBalance()">
+        </div>
+        <div class="form-group">
+          <label>Tarehe ya Deni *</label>
+          <input type="date" id="fTarehe" required>
+        </div>
+        <div class="form-group">
+          <label>Tarehe ya Mwisho ya Kulipa</label>
+          <input type="date" id="fDeadline">
+        </div>
+        <div class="form-group">
+          <label>Hali ya Malipo</label>
+          <select id="fHali">
+            <option value="Haijalipiwa">Haijalipiwa</option>
+            <option value="Imelipwa Sehemu">Imelipwa Sehemu</option>
+            <option value="Imelipwa">Imelipwa</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Kinachobaki (TZS)</label>
+          <input type="number" id="fKinachobaki" placeholder="0" readonly
+            style="background:#f8f5f0;cursor:not-allowed;color:var(--danger);font-weight:700">
+        </div>
+        <div class="form-group full">
+          <label>Maelezo / Kumbukumbu</label>
+          <textarea id="fMaelezo" placeholder="Maelezo ya ziada..."></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closeModal('formModal')">Ghairi</button>
+      <button class="btn btn-primary" id="submitBtn" onclick="submitForm()">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+        Hifadhi Deni
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ VIEW MODAL ══════════════ -->
+<div class="modal-overlay" id="viewModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Maelezo Kamili ya Deni</h3>
+      <button class="modal-close" onclick="closeModal('viewModal')">✕</button>
+    </div>
+    <div class="modal-body" id="viewBody">
+      <!-- filled by JS -->
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closeModal('viewModal')">Funga</button>
+      <button class="btn btn-amber" id="viewEditBtn">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+        Hariri Deni
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+  // ══════════════════════════════════════
+  //  STATE
+  // ══════════════════════════════════════
+  const DEFAULT_API_URL = 'https://script.google.com/macros/s/AKfycbwDUbanX9xVjr1Tpp-ChJWWG5nThELBNXAOfNumSnmGhWF6v13ozg7l7mb2n9f1nyr_cw/exec';
+  let API_URL  = localStorage.getItem('ukm_madeni_api') || DEFAULT_API_URL;
+  let allData  = [];
+  let filtered = [];
+  let sortCol  = 'tarehe';
+  let sortDir  = 'desc';
+  let page     = 1;
+  const PER    = 15;
+  let editingRow = null;
+
+  // ══════════════════════════════════════
+  //  CONFIG
+  // ══════════════════════════════════════
+  function saveConfig() {
+    const val = document.getElementById('apiUrlInput').value.trim();
+    if (!val) { showToast('Weka URL kwanza!', true); return; }
+    API_URL = val;
+    localStorage.setItem('ukm_madeni_api', val);
+    updateApiStatus(false);
+    showToast('URL imehifadhiwa. Inapakia data...');
+    loadData();
+  }
+
+  function updateApiStatus(connected) {
+    const dot  = document.getElementById('apiStatusDot');
+    const text = document.getElementById('apiStatusText');
+    dot.className  = 'config-dot' + (connected ? '' : ' disconnected');
+    text.textContent = connected ? 'Imeunganishwa ✓' : 'Haijaunganishwa';
+  }
+
+  // ══════════════════════════════════════
+  //  DATA LOADING
+  // ══════════════════════════════════════
+  async function loadData() {
+    if (!API_URL) {
+      renderTable([]);
+      showEmpty('Weka URL ya Google Apps Script API kwanza ili kuunganika na Google Sheets.');
+      return;
+    }
+    showLoading();
+    try {
+      const res  = await fetch(`${API_URL}?action=getMadeni`);
+      const json = await res.json();
+      if (json.success) {
+        allData = json.data || [];
+        updateApiStatus(true);
+        applyFilters();
+        updateSummary();
+      } else {
+        throw new Error(json.message || 'Kosa la seva');
+      }
+    } catch (e) {
+      updateApiStatus(false);
+      showEmpty('Imeshindwa kupata data. Hakikisha URL ni sahihi na Google Apps Script imewekwa vizuri.<br><small>' + e.message + '</small>');
+      showToast('Kosa: ' + e.message, true);
+    }
+  }
+
+  // ══════════════════════════════════════
+  //  FILTERS & SORT
+  // ══════════════════════════════════════
+  function filterTable() {
+    applyFilters();
+    page = 1;
+    renderTable(filtered);
+    renderPagination();
+  }
+
+  function applyFilters() {
+    const q      = document.getElementById('searchInput').value.toLowerCase();
+    const status = document.getElementById('statusFilter').value;
+    filtered = allData.filter(r => {
+      const matchQ = !q || [r.jina, r.simu, r.bidhaa, r.anuani].some(v => (v||'').toLowerCase().includes(q));
+      const matchS = !status || r.hali === status;
+      return matchQ && matchS;
+    });
+    sortData();
+  }
+
+  function sortTable(col) {
+    if (sortCol === col) sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+    else { sortCol = col; sortDir = 'asc'; }
+    sortData();
+    renderTable(filtered);
+  }
+
+  function sortData() {
+    filtered.sort((a, b) => {
+      let va = a[sortCol] ?? '', vb = b[sortCol] ?? '';
+      if (!isNaN(va) && !isNaN(vb)) { va = +va; vb = +vb; }
+      if (va < vb) return sortDir === 'asc' ? -1 : 1;
+      if (va > vb) return sortDir === 'asc' ?  1 : -1;
+      return 0;
+    });
+    renderTable(filtered);
+  }
+
+  // ══════════════════════════════════════
+  //  RENDER TABLE
+  // ══════════════════════════════════════
+  function renderTable(data) {
+    const tbody = document.getElementById('tableBody');
+    const start = (page - 1) * PER;
+    const rows  = data.slice(start, start + PER);
+    document.getElementById('recordCount').textContent =
+      `Matokeo ${data.length} kati ya ${allData.length}`;
+
+    if (!rows.length) {
+      showEmpty(allData.length ? 'Hakuna matokeo yanayolingana na utafutaji wako.' : 'Bado hakuna madeni yaliyorekodiwa.');
+      renderPagination();
+      return;
+    }
+
+    tbody.innerHTML = rows.map((r, i) => {
+      const idx    = start + i + 1;
+      const baki   = (+r.jumla||0) - (+r.kilicholipwa||0);
+      const hClass = r.hali === 'Imelipwa' ? 'paid' : r.hali === 'Imelipwa Sehemu' ? 'partial' : 'unpaid';
+      const bLabel = r.hali === 'Imelipwa' ? 'Imelipwa' : r.hali === 'Imelipwa Sehemu' ? 'Imelipwa Sehemu' : 'Haijalipiwa';
+      return `
+        <tr>
+          <td>${idx}</td>
+          <td><div class="td-name">${esc(r.jina)}</div><div class="td-phone">${esc(r.anuani||'')}</div></td>
+          <td class="td-phone">${esc(r.simu)}</td>
+          <td>${esc(r.bidhaa)}</td>
+          <td class="td-amount">${fmt(r.jumla)}</td>
+          <td class="td-amount green">${fmt(r.kilicholipwa)}</td>
+          <td class="td-amount ${baki > 0 ? 'red' : 'green'}">${fmt(baki)}</td>
+          <td style="white-space:nowrap">${fmtDate(r.tarehe)}</td>
+          <td><span class="badge badge-${hClass}">${bLabel}</span></td>
+          <td style="white-space:nowrap">
+            <button class="action-btn" title="Angalia" onclick="viewRecord('${r.id}')">
+              <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+            </button>
+            <button class="action-btn" title="Hariri" onclick="editRecord('${r.id}')">
+              <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+            </button>
+            <button class="action-btn danger" title="Futa" onclick="deleteRecord('${r.id}', '${esc(r.jina)}')">
+              <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+            </button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+    renderPagination();
+  }
+
+  function showLoading() {
+    document.getElementById('tableBody').innerHTML =
+      `<tr class="loading-row"><td colspan="10"><span class="spinner"></span>Inapakia data kutoka Google Sheets...</td></tr>`;
+    document.getElementById('recordCount').textContent = 'Inapakia...';
+  }
+
+  function showEmpty(msg) {
+    document.getElementById('tableBody').innerHTML =
+      `<tr><td colspan="10"><div class="empty-state">
+        <svg viewBox="0 0 24 24"><path d="M20 6h-2.18A3 3 0 0015 4H9a3 3 0 00-2.82 2H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V8a2 2 0 00-2-2z"/></svg>
+        <p>${msg}</p>
+      </div></td></tr>`;
+  }
+
+  // ══════════════════════════════════════
+  //  PAGINATION
+  // ══════════════════════════════════════
+  function renderPagination() {
+    const total = Math.ceil(filtered.length / PER);
+    const pi    = document.getElementById('pageInfo');
+    const pb    = document.getElementById('pageBtns');
+    const start = (page - 1) * PER + 1;
+    const end   = Math.min(page * PER, filtered.length);
+    pi.textContent = filtered.length ? `Inaonyesha ${start}–${end} kati ya ${filtered.length}` : '';
+    pb.innerHTML = '';
+    if (total <= 1) return;
+    const prev = document.createElement('button');
+    prev.className = 'page-btn'; prev.textContent = '‹';
+    prev.disabled = page === 1;
+    prev.onclick = () => { page--; renderTable(filtered); };
+    pb.appendChild(prev);
+    for (let i = 1; i <= total; i++) {
+      const btn = document.createElement('button');
+      btn.className = 'page-btn' + (i === page ? ' active' : '');
+      btn.textContent = i;
+      btn.onclick = ((p) => () => { page = p; renderTable(filtered); })(i);
+      pb.appendChild(btn);
+    }
+    const next = document.createElement('button');
+    next.className = 'page-btn'; next.textContent = '›';
+    next.disabled = page === total;
+    next.onclick = () => { page++; renderTable(filtered); };
+    pb.appendChild(next);
+  }
+
+  // ══════════════════════════════════════
+  //  SUMMARY
+  // ══════════════════════════════════════
+  function updateSummary() {
+    const unpaid  = allData.filter(r => r.hali === 'Haijalipiwa');
+    const partial = allData.filter(r => r.hali === 'Imelipwa Sehemu');
+    const paid    = allData.filter(r => r.hali === 'Imelipwa');
+    const totalAmt = allData.reduce((s, r) => s + (+r.jumla||0), 0);
+    const unpaidAmt  = unpaid.reduce((s, r)  => s + (+r.jumla||0) - (+r.kilicholipwa||0), 0);
+    const partialAmt = partial.reduce((s, r) => s + (+r.jumla||0) - (+r.kilicholipwa||0), 0);
+    const paidAmt    = paid.reduce((s, r)    => s + (+r.jumla||0), 0);
+
+    document.getElementById('sumTotal').textContent   = 'TZS ' + fmt(totalAmt);
+    document.getElementById('sumUnpaid').textContent  = 'TZS ' + fmt(unpaidAmt);
+    document.getElementById('sumPartial').textContent = 'TZS ' + fmt(partialAmt);
+    document.getElementById('sumPaid').textContent    = 'TZS ' + fmt(paidAmt);
+    document.getElementById('sumTotalCount').textContent   = `Wateja ${allData.length}`;
+    document.getElementById('sumUnpaidCount').textContent  = `Wateja ${unpaid.length}`;
+    document.getElementById('sumPartialCount').textContent = `Wateja ${partial.length}`;
+    document.getElementById('sumPaidCount').textContent    = `Wateja ${paid.length}`;
+  }
+
+  // ══════════════════════════════════════
+  //  ADD / EDIT MODAL
+  // ══════════════════════════════════════
+  function openAddModal() {
+    editingRow = null;
+    document.getElementById('modalTitle').textContent = 'Ongeza Deni Jipya';
+    document.getElementById('submitBtn').innerHTML =
+      `<svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px"><path d="M17 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg> Hifadhi Deni`;
+    clearForm();
+    document.getElementById('fTarehe').value = today();
+    openModal('formModal');
+  }
+
+  function editRecord(id) {
+    const r = allData.find(x => x.id == id);
+    if (!r) return;
+    editingRow = r;
+    document.getElementById('modalTitle').textContent = 'Hariri Deni';
+    document.getElementById('submitBtn').innerHTML =
+      `<svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px"><path d="M17 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg> Sasisisha`;
+    document.getElementById('fJina').value         = r.jina || '';
+    document.getElementById('fSimu').value         = r.simu || '';
+    document.getElementById('fAnuani').value       = r.anuani || '';
+    document.getElementById('fBidhaa').value       = r.bidhaa || '';
+    document.getElementById('fJumla').value        = r.jumla || '';
+    document.getElementById('fKilicholipwa').value = r.kilicholipwa || '0';
+    document.getElementById('fTarehe').value       = r.tarehe || '';
+    document.getElementById('fDeadline').value     = r.deadline || '';
+    document.getElementById('fHali').value         = r.hali || 'Haijalipiwa';
+    document.getElementById('fMaelezo').value      = r.maelezo || '';
+    calcBalance();
+    openModal('formModal');
+  }
+
+  function clearForm() {
+    ['fJina','fSimu','fAnuani','fBidhaa','fJumla','fTarehe','fDeadline','fMaelezo'].forEach(id =>
+      document.getElementById(id).value = '');
+    document.getElementById('fKilicholipwa').value = '0';
+    document.getElementById('fKinachobaki').value  = '';
+    document.getElementById('fHali').value = 'Haijalipiwa';
+  }
+
+  function calcBalance() {
+    const j = +document.getElementById('fJumla').value || 0;
+    const k = +document.getElementById('fKilicholipwa').value || 0;
+    const b = j - k;
+    document.getElementById('fKinachobaki').value = b;
+    const sel = document.getElementById('fHali');
+    if (b <= 0 && j > 0) sel.value = 'Imelipwa';
+    else if (k > 0 && b > 0) sel.value = 'Imelipwa Sehemu';
+    else sel.value = 'Haijalipiwa';
+  }
+
+  async function submitForm() {
+    const jina = document.getElementById('fJina').value.trim();
+    const simu = document.getElementById('fSimu').value.trim();
+    const bidhaa = document.getElementById('fBidhaa').value.trim();
+    const jumla  = document.getElementById('fJumla').value;
+    const tarehe = document.getElementById('fTarehe').value;
+    if (!jina || !simu || !bidhaa || !jumla || !tarehe) {
+      showToast('Jaza sehemu zote zinazohitajika (*)', true); return;
+    }
+    if (!API_URL) { showToast('Weka URL ya API kwanza!', true); return; }
+
+    const payload = {
+      action: editingRow ? 'updateMadeni' : 'addMadeni',
+      id:             editingRow?.id || '',
+      jina, simu,
+      anuani:         document.getElementById('fAnuani').value.trim(),
+      bidhaa,
+      jumla:          +jumla,
+      kilicholipwa:   +document.getElementById('fKilicholipwa').value || 0,
+      tarehe,
+      deadline:       document.getElementById('fDeadline').value,
+      hali:           document.getElementById('fHali').value,
+      maelezo:        document.getElementById('fMaelezo').value.trim(),
+    };
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true; btn.textContent = 'Inahifadhi...';
+
+    try {
+      const res  = await fetch(API_URL, {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      });
+      const json = await res.json();
+      if (json.success) {
+        showToast(editingRow ? 'Deni limesasishwa!' : 'Deni jipya limeongezwa!');
+        closeModal('formModal');
+        loadData();
+      } else {
+        throw new Error(json.message);
+      }
+    } catch (e) {
+      showToast('Kosa: ' + e.message, true);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = editingRow ? 'Sasisisha' : 'Hifadhi Deni';
+    }
+  }
+
+  // ══════════════════════════════════════
+  //  VIEW MODAL
+  // ══════════════════════════════════════
+  function viewRecord(id) {
+    const r = allData.find(x => x.id == id);
+    if (!r) return;
+    const baki   = (+r.jumla||0) - (+r.kilicholipwa||0);
+    const hClass = r.hali === 'Imelipwa' ? 'paid' : r.hali === 'Imelipwa Sehemu' ? 'partial' : 'unpaid';
+    document.getElementById('viewBody').innerHTML = `
+      <div class="detail-grid">
+        <div class="detail-item full">
+          <div class="detail-label">Hali ya Malipo</div>
+          <div><span class="badge badge-${hClass}">${r.hali}</span></div>
+        </div>
+        <div class="detail-divider"></div>
+        <div class="detail-item">
+          <div class="detail-label">Jina la Mteja</div>
+          <div class="detail-value">${esc(r.jina)}</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Namba ya Simu</div>
+          <div class="detail-value">${esc(r.simu)}</div>
+        </div>
+        <div class="detail-item full">
+          <div class="detail-label">Anuani</div>
+          <div class="detail-value">${esc(r.anuani||'—')}</div>
+        </div>
+        <div class="detail-divider"></div>
+        <div class="detail-item full">
+          <div class="detail-label">Bidhaa / Huduma</div>
+          <div class="detail-value">${esc(r.bidhaa)}</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Jumla ya Deni</div>
+          <div class="detail-value big">TZS ${fmt(r.jumla)}</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Kilicholipwa</div>
+          <div class="detail-value big" style="color:var(--success)">TZS ${fmt(r.kilicholipwa)}</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Kinachobaki</div>
+          <div class="detail-value big" style="color:${baki>0?'var(--danger)':'var(--success)'}">TZS ${fmt(baki)}</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Tarehe ya Deni</div>
+          <div class="detail-value">${fmtDate(r.tarehe)}</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-label">Tarehe ya Mwisho</div>
+          <div class="detail-value">${r.deadline ? fmtDate(r.deadline) : '—'}</div>
+        </div>
+        <div class="detail-divider"></div>
+        <div class="detail-item full">
+          <div class="detail-label">Maelezo / Kumbukumbu</div>
+          <div class="detail-value">${esc(r.maelezo||'Hakuna maelezo ya ziada.')}</div>
+        </div>
+      </div>
+    `;
+    document.getElementById('viewEditBtn').onclick = () => {
+      closeModal('viewModal');
+      editRecord(id);
+    };
+    openModal('viewModal');
+  }
+
+  // ══════════════════════════════════════
+  //  DELETE
+  // ══════════════════════════════════════
+  async function deleteRecord(id, name) {
+    if (!confirm(`Una uhakika unataka kufuta deni la "${name}"?\nHatua hii haiwezi kurudishwa.`)) return;
+    if (!API_URL) { showToast('Weka URL ya API kwanza!', true); return; }
+    try {
+      const res  = await fetch(API_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'deleteMadeni', id }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        showToast('Deni limefutwa.');
+        loadData();
+      } else throw new Error(json.message);
+    } catch (e) {
+      showToast('Kosa: ' + e.message, true);
+    }
+  }
+
+  // ══════════════════════════════════════
+  //  HELPERS
+  // ══════════════════════════════════════
+  function fmt(n) {
+    const num = +n || 0;
+    return num.toLocaleString('sw-TZ');
+  }
+  function fmtDate(d) {
+    if (!d) return '—';
+    try { return new Date(d).toLocaleDateString('sw-TZ', {day:'2-digit',month:'short',year:'numeric'}); }
+    catch { return d; }
+  }
+  function today() {
+    return new Date().toISOString().split('T')[0];
+  }
+  function esc(s) {
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function openModal(id) {
+    document.getElementById(id).classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('show');
+    document.body.style.overflow = '';
+  }
+
+  function showToast(msg, isError = false) {
+    const c    = document.getElementById('toastContainer');
+    const t    = document.createElement('div');
+    t.className = 'toast' + (isError ? ' error' : '');
+    t.innerHTML = `<svg viewBox="0 0 24 24">${isError
+      ? '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>'
+      : '<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>'}
+    </svg>${msg}`;
+    c.appendChild(t);
+    setTimeout(() => t.remove(), 4000);
+  }
+
+  // ══════════════════════════════════════
+  //  HEADER NAV
+  // ══════════════════════════════════════
+  const menuBtn  = document.getElementById('menuBtn');
+  const sideNav  = document.getElementById('sideNav');
+  const backdrop = document.getElementById('backdrop');
+  function toggleNav() {
+    menuBtn.classList.toggle('open');
+    sideNav.classList.toggle('open');
+    backdrop.classList.toggle('show');
+  }
+  menuBtn.addEventListener('click', toggleNav);
+  backdrop.addEventListener('click', toggleNav);
+
+  // Close modals on overlay click
+  document.querySelectorAll('.modal-overlay').forEach(el => {
+    el.addEventListener('click', e => {
+      if (e.target === el) closeModal(el.id);
+    });
+  });
+
+  // ══════════════════════════════════════
+  //  INIT — URL imeandikwa tayari, pakia moja kwa moja
+  // ══════════════════════════════════════
+  window.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('apiUrlInput').value = API_URL;
+    // Hifadhi kwenye localStorage pia
+    localStorage.setItem('ukm_madeni_api', API_URL);
+    // Pakia data mara moja
+    loadData();
+  });
+</script>
+</body>
+</html>

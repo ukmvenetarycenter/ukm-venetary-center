@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>UKM – Matumizi ya Duka</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --forest:      #1b4332;
+      --forest-mid:  #2d6a4f;
+      --forest-soft: #52b788;
+      --amber:       #d4a017;
+      --amber-light: #f4c945;
+      --cream:       #fdf8f0;
+      --sand:        #e9dcc9;
+      --white:       #ffffff;
+      --text-dark:   #1c1c1c;
+      --text-mid:    #4a4a4a;
+      --danger:      #c0392b;
+      --success:     #27ae60;
+      --card-bg:     rgba(255,255,255,0.92);
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--text-dark);
+      overflow-x: hidden;
+    }
+
+    /* ══════════════ HEADER ══════════════ */
+    header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      background: rgba(27,67,50,0.97);
+      backdrop-filter: blur(12px);
+      border-bottom: 2px solid var(--amber);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 36px; height: 72px;
+    }
+    .header-logo { display: flex; align-items: center; gap: 12px; }
+    .logo-circle {
+      width: 48px; height: 48px; border-radius: 50%;
+      border: 2px solid var(--amber); background: var(--forest-mid);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 0 3px rgba(212,160,23,0.18);
+    }
+    .logo-circle svg { width: 28px; height: 28px; fill: var(--amber-light); }
+    .header-title { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 900; color: var(--amber); text-transform: uppercase; letter-spacing: 0.05em; }
+    .header-sub { font-size: 0.62rem; color: rgba(255,255,255,0.6); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 1px; }
+    .header-right { display: flex; align-items: center; gap: 12px; }
+    .btn-back {
+      display: flex; align-items: center; gap: 6px;
+      background: transparent; border: 1.5px solid rgba(212,160,23,0.45);
+      border-radius: 7px; padding: 7px 16px;
+      color: rgba(255,255,255,0.8); font-size: 0.78rem; font-family: 'DM Sans', sans-serif;
+      cursor: pointer; text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-back:hover { border-color: var(--amber); color: var(--amber-light); }
+    .btn-back svg { width: 14px; height: 14px; fill: currentColor; }
+
+    /* ══════════════ PAGE WRAPPER ══════════════ */
+    .page-wrap {
+      max-width: 1200px; margin: 0 auto;
+      padding: 100px 24px 60px;
+    }
+
+    /* ══════════════ PAGE HERO ══════════════ */
+    .page-hero {
+      background: linear-gradient(135deg, var(--forest) 0%, var(--forest-mid) 100%);
+      border-radius: 18px; padding: 36px 40px; margin-bottom: 32px;
+      position: relative; overflow: hidden;
+      border: 1px solid rgba(212,160,23,0.3);
+      box-shadow: 0 8px 40px rgba(27,67,50,0.2);
+    }
+    .page-hero::before {
+      content: ''; position: absolute; top: -40px; right: -40px;
+      width: 200px; height: 200px; border-radius: 50%;
+      background: rgba(212,160,23,0.08); pointer-events: none;
+    }
+    .page-hero-badge {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: rgba(212,160,23,0.15); border: 1px solid rgba(212,160,23,0.4);
+      border-radius: 40px; padding: 5px 14px;
+      font-size: 0.65rem; letter-spacing: 0.15em; color: var(--amber-light);
+      text-transform: uppercase; margin-bottom: 12px;
+    }
+    .page-hero-badge::before {
+      content: ''; width: 5px; height: 5px; border-radius: 50%;
+      background: var(--amber-light); animation: pulse 1.8s infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.7)} }
+    .page-hero h1 {
+      font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 900;
+      color: var(--white); line-height: 1.15;
+    }
+    .page-hero h1 em { color: var(--amber-light); font-style: italic; }
+    .page-hero p { color: rgba(255,255,255,0.75); margin-top: 8px; font-size: 0.9rem; }
+
+    /* ══════════════ TABS ══════════════ */
+    .tabs {
+      display: flex; gap: 4px; background: var(--white);
+      border: 1px solid var(--sand); border-radius: 12px;
+      padding: 5px; margin-bottom: 28px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+    .tab-btn {
+      flex: 1; padding: 12px 16px; border: none; border-radius: 8px;
+      background: transparent; cursor: pointer; font-family: 'DM Sans', sans-serif;
+      font-size: 0.84rem; font-weight: 500; color: var(--text-mid);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: all 0.22s;
+    }
+    .tab-btn svg { width: 16px; height: 16px; fill: currentColor; }
+    .tab-btn.active {
+      background: var(--forest); color: var(--amber-light);
+      box-shadow: 0 2px 10px rgba(27,67,50,0.25);
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ══════════════ FORM CARD ══════════════ */
+    .form-card {
+      background: var(--card-bg); border: 1px solid var(--sand);
+      border-radius: 16px; padding: 36px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+    }
+    .form-card h2 {
+      font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700;
+      color: var(--forest); margin-bottom: 6px;
+    }
+    .form-card .form-subtitle { font-size: 0.82rem; color: var(--text-mid); margin-bottom: 28px; }
+
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group.full { grid-column: 1 / -1; }
+    label { font-size: 0.78rem; font-weight: 600; color: var(--forest); letter-spacing: 0.06em; text-transform: uppercase; }
+    label span { color: var(--danger); margin-left: 2px; }
+    input, select, textarea {
+      width: 100%; padding: 12px 14px; border: 1.5px solid var(--sand);
+      border-radius: 9px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+      color: var(--text-dark); background: var(--white);
+      transition: border-color 0.2s, box-shadow 0.2s; outline: none;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--forest-soft);
+      box-shadow: 0 0 0 3px rgba(82,183,136,0.18);
+    }
+    textarea { resize: vertical; min-height: 80px; }
+
+    .form-actions { display: flex; gap: 12px; margin-top: 28px; }
+    .btn-primary {
+      flex: 1; padding: 14px 24px; border: none; border-radius: 10px;
+      background: var(--forest); color: var(--amber-light);
+      font-family: 'DM Sans', sans-serif; font-size: 0.92rem; font-weight: 600;
+      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: all 0.22s; letter-spacing: 0.04em;
+    }
+    .btn-primary:hover { background: var(--forest-mid); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(27,67,50,0.3); }
+    .btn-primary:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+    .btn-primary svg { width: 18px; height: 18px; fill: currentColor; }
+    .btn-secondary {
+      padding: 14px 24px; border: 1.5px solid var(--sand); border-radius: 10px;
+      background: transparent; color: var(--text-mid);
+      font-family: 'DM Sans', sans-serif; font-size: 0.92rem; font-weight: 500;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .btn-secondary:hover { border-color: var(--forest); color: var(--forest); }
+
+    /* ══════════════ TOAST ══════════════ */
+    .toast {
+      position: fixed; bottom: 28px; right: 28px; z-index: 9999;
+      padding: 14px 22px; border-radius: 12px;
+      font-size: 0.88rem; font-weight: 500; color: var(--white);
+      display: flex; align-items: center; gap: 10px;
+      transform: translateY(100px); opacity: 0;
+      transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+      max-width: 360px; box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.success { background: var(--success); }
+    .toast.error { background: var(--danger); }
+    .toast.loading { background: var(--forest); }
+    .toast svg { width: 20px; height: 20px; fill: currentColor; flex-shrink: 0; }
+
+    /* ══════════════ REPORT PANEL ══════════════ */
+    .report-controls {
+      background: var(--card-bg); border: 1px solid var(--sand);
+      border-radius: 14px; padding: 24px 28px; margin-bottom: 24px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+      display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px;
+    }
+    .filter-group { display: flex; flex-direction: column; gap: 5px; }
+    .filter-group label { font-size: 0.72rem; font-weight: 600; color: var(--forest); letter-spacing: 0.08em; text-transform: uppercase; }
+    .filter-group input, .filter-group select { width: auto; min-width: 160px; padding: 10px 12px; font-size: 0.84rem; }
+    .btn-load {
+      padding: 11px 24px; border: none; border-radius: 9px;
+      background: var(--forest); color: var(--amber-light);
+      font-family: 'DM Sans', sans-serif; font-size: 0.86rem; font-weight: 600;
+      cursor: pointer; display: flex; align-items: center; gap: 7px;
+      transition: all 0.2s; white-space: nowrap;
+    }
+    .btn-load:hover { background: var(--forest-mid); }
+    .btn-load svg { width: 16px; height: 16px; fill: currentColor; }
+
+    /* Summary tiles */
+    .summary-tiles {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px; margin-bottom: 28px;
+    }
+    .s-tile {
+      background: var(--card-bg); border: 1px solid var(--sand);
+      border-radius: 14px; padding: 20px 22px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+      position: relative; overflow: hidden;
+    }
+    .s-tile::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 3px; background: var(--forest-soft); border-radius: 3px 3px 0 0;
+    }
+    .s-tile.amber-line::before { background: var(--amber); }
+    .s-tile.green-line::before { background: var(--success); }
+    .s-tile-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-mid); font-weight: 600; margin-bottom: 8px; }
+    .s-tile-value { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; color: var(--forest); line-height: 1; }
+    .s-tile-sub { font-size: 0.72rem; color: var(--text-mid); margin-top: 4px; }
+
+    /* Table */
+    .table-wrap {
+      background: var(--card-bg); border: 1px solid var(--sand);
+      border-radius: 14px; overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+    }
+    .table-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 24px; border-bottom: 1px solid var(--sand);
+    }
+    .table-header h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--forest); }
+    .table-header span { font-size: 0.78rem; color: var(--text-mid); }
+    table { width: 100%; border-collapse: collapse; }
+    thead th {
+      background: var(--forest); color: var(--amber-light);
+      padding: 12px 16px; font-size: 0.72rem; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase; text-align: left;
+    }
+    tbody tr { border-bottom: 1px solid rgba(233,220,201,0.6); transition: background 0.15s; }
+    tbody tr:hover { background: rgba(82,183,136,0.06); }
+    tbody td { padding: 13px 16px; font-size: 0.86rem; color: var(--text-dark); }
+    .td-amount { font-family: 'Playfair Display', serif; font-weight: 700; color: var(--forest); }
+    .td-date { color: var(--text-mid); font-size: 0.8rem; }
+    .td-name { font-weight: 600; }
+    .td-cat {
+      display: inline-block; padding: 3px 10px; border-radius: 20px;
+      background: rgba(27,67,50,0.1); color: var(--forest);
+      font-size: 0.73rem; font-weight: 600; letter-spacing: 0.06em;
+    }
+    .empty-state {
+      text-align: center; padding: 60px 20px; color: var(--text-mid);
+    }
+    .empty-state svg { width: 48px; height: 48px; fill: var(--sand); margin-bottom: 12px; }
+    .empty-state p { font-size: 0.9rem; }
+
+    /* ══════════════ LOADER ══════════════ */
+    .spinner {
+      width: 18px; height: 18px; border: 2.5px solid rgba(255,255,255,0.3);
+      border-top-color: currentColor; border-radius: 50%;
+      animation: spin 0.7s linear infinite; display: none;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ══════════════ RESPONSIVE ══════════════ */
+    @media (max-width: 700px) {
+      header { padding: 0 18px; height: 64px; }
+      .page-wrap { padding: 88px 14px 40px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .tabs { flex-direction: column; }
+      .form-card { padding: 22px 18px; }
+      .summary-tiles { grid-template-columns: 1fr 1fr; }
+      .report-controls { flex-direction: column; }
+      table { font-size: 0.8rem; }
+      thead th, tbody td { padding: 10px 10px; }
+      .page-hero { padding: 24px 22px; }
+      .page-hero h1 { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════ HEADER ══════════════ -->
+<header>
+  <div class="header-logo">
+    <div class="logo-circle">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+    </div>
+    <div>
+      <div class="header-title">UKM Kituo cha Mifugo</div>
+      <div class="header-sub">Mfumo wa Matumizi</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <a href="index.html" class="btn-back">
+      <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+      Nyumbani
+    </a>
+  </div>
+</header>
+
+<!-- ══════════════ TOAST ══════════════ -->
+<div class="toast" id="toast">
+  <svg id="toast-icon" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+  <span id="toast-msg"></span>
+</div>
+
+<!-- ══════════════ PAGE WRAP ══════════════ -->
+<div class="page-wrap">
+
+  <!-- HERO -->
+  <div class="page-hero">
+    <div class="page-hero-badge">Rekodi za Matumizi</div>
+    <h1>Fuatilia Matumizi <em>Yako</em></h1>
+    <p>Ingiza na angalia matumizi ya kila siku, wiki na mwezi kwa urahisi.</p>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('ingiza',this)">
+      <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
+      Ingiza Matumizi
+    </button>
+    <button class="tab-btn" onclick="switchTab('ripoti',this)">
+      <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+      Ripoti & Takwimu
+    </button>
+  </div>
+
+  <!-- ══ TAB: INGIZA ══ -->
+  <div class="tab-panel active" id="panel-ingiza">
+    <div class="form-card">
+      <h2>Ongeza Matumizi Mapya</h2>
+      <p class="form-subtitle">Jaza fomu hii ili kurekodi matumizi katika Google Sheets.</p>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Jina la Mtumiaji <span>*</span></label>
+          <input type="text" id="fld-jina" placeholder="Mfano: Amina Juma" autocomplete="off"/>
+        </div>
+        <div class="form-group">
+          <label>Kitengo / Jukumu <span>*</span></label>
+          <select id="fld-kitengo">
+            <option value="">-- Chagua --</option>
+            <option>Mfanyakazi – Duka</option>
+            <option>Mfanyakazi – Kliniki</option>
+            <option>Msimamizi</option>
+            <option>Matumizi ya Ofisi</option>
+            <option>Meneja</option>
+            <option>Nyingine</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Tarehe <span>*</span></label>
+          <input type="date" id="fld-tarehe"/>
+        </div>
+        <div class="form-group">
+          <label>Kiasi (TZS) <span>*</span></label>
+          <input type="number" id="fld-kiasi" placeholder="Mfano: 25000" min="0"/>
+        </div>
+        <div class="form-group">
+          <label>Kategoria <span>*</span></label>
+          <select id="fld-kategoria">
+            <option value="">-- Chagua --</option>
+            <option>Usafiri</option>
+            <option>Chakula na Vinywaji</option>
+            <option>Vifaa vya Ofisi</option>
+            <option>Umeme na Maji</option>
+            <option>Simu na Mtandao</option>
+            <option>Matengenezo</option>
+            <option>Ununuzi wa Bidhaa</option>
+            <option>Mishahara</option>
+            <option>Matangazo</option>
+            <option>Nyingine</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Njia ya Malipo</label>
+          <select id="fld-njia">
+            <option value="">-- Chagua --</option>
+            <option>Pesa Taslimu</option>
+            <option>M-Pesa</option>
+            <option>Tigo Pesa</option>
+            <option>Airtel Money</option>
+            <option>Benki</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label>Maelezo ya Matumizi <span>*</span></label>
+          <textarea id="fld-maelezo" placeholder="Eleza matumizi haya kwa ufupi..."></textarea>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-primary" id="btn-hifadhi" onclick="hifadhiMatumizi()">
+          <svg viewBox="0 0 24 24"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+          <div class="spinner" id="save-spinner"></div>
+          <span id="save-txt">Hifadhi katika Google Sheets</span>
+        </button>
+        <button class="btn-secondary" onclick="futaFomu()">Futa</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TAB: RIPOTI ══ -->
+  <div class="tab-panel" id="panel-ripoti">
+
+    <!-- Filter controls -->
+    <div class="report-controls">
+      <div class="filter-group">
+        <label>Aina ya Ripoti</label>
+        <select id="rpt-aina">
+          <option value="siku">Siku (Leo)</option>
+          <option value="wiki">Wiki (Wiki hii)</option>
+          <option value="mwezi">Mwezi (Mwezi huu)</option>
+          <option value="tarehe">Tarehe Maalum</option>
+          <option value="yote">Yote (Overall)</option>
+        </select>
+      </div>
+      <div class="filter-group" id="grp-tarehe" style="display:none">
+        <label>Tarehe</label>
+        <input type="date" id="rpt-tarehe"/>
+      </div>
+      <div class="filter-group" id="grp-mwaka">
+        <label>Mwaka</label>
+        <select id="rpt-mwaka">
+          <option value="2025">2025</option>
+          <option value="2026" selected>2026</option>
+          <option value="2027">2027</option>
+        </select>
+      </div>
+      <button class="btn-load" onclick="loadRipoti()">
+        <svg viewBox="0 0 24 24"><path d="M17.65 6.35A7.96 7.96 0 0012 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+        <div class="spinner" id="rpt-spinner"></div>
+        <span id="rpt-txt">Pakia Ripoti</span>
+      </button>
+    </div>
+
+    <!-- Summary tiles -->
+    <div class="summary-tiles" id="summary-tiles" style="display:none">
+      <div class="s-tile amber-line">
+        <div class="s-tile-label">Jumla – Siku</div>
+        <div class="s-tile-value" id="sum-siku">–</div>
+        <div class="s-tile-sub">Matumizi ya leo</div>
+      </div>
+      <div class="s-tile">
+        <div class="s-tile-label">Jumla – Wiki</div>
+        <div class="s-tile-value" id="sum-wiki">–</div>
+        <div class="s-tile-sub">Wiki ya sasa</div>
+      </div>
+      <div class="s-tile green-line">
+        <div class="s-tile-label">Jumla – Mwezi</div>
+        <div class="s-tile-value" id="sum-mwezi">–</div>
+        <div class="s-tile-sub">Mwezi wa sasa</div>
+      </div>
+      <div class="s-tile amber-line">
+        <div class="s-tile-label">Jumla Overall</div>
+        <div class="s-tile-value" id="sum-yote">–</div>
+        <div class="s-tile-sub">Rekodi zote</div>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrap">
+      <div class="table-header">
+        <h3>Orodha ya Matumizi</h3>
+        <span id="rpt-count">–</span>
+      </div>
+      <div style="overflow-x:auto">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Tarehe</th>
+              <th>Jina</th>
+              <th>Kitengo</th>
+              <th>Kategoria</th>
+              <th>Maelezo</th>
+              <th>Njia</th>
+              <th>Kiasi (TZS)</th>
+            </tr>
+          </thead>
+          <tbody id="rpt-tbody">
+            <tr><td colspan="8">
+              <div class="empty-state">
+                <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+                <p>Bonyeza "Pakia Ripoti" kuona matumizi.</p>
+              </div>
+            </td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /panel-ripoti -->
+</div><!-- /page-wrap -->
+
+<script>
+// ══════════════════════════════════════════
+// MSTARI HUU BADILISHA NA URL YAKO YA Apps Script
+// ══════════════════════════════════════════
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxMzL2pNjoghHxnKL8mBAfqJnTvjJwFW4xllChmeY_eOGjcqJwQaRXOb0Lvw26Pao07/exec";
+
+// Weka tarehe ya leo kwa default
+document.getElementById('fld-tarehe').valueAsDate = new Date();
+
+// Tab switching
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+// Show/hide filter fields
+document.getElementById('rpt-aina').addEventListener('change', function() {
+  const v = this.value;
+  document.getElementById('grp-tarehe').style.display = v === 'tarehe' ? '' : 'none';
+  document.getElementById('grp-mwaka').style.display = (v === 'yote' || v === 'mwezi') ? '' : 'none';
+});
+
+// Toast
+function toast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  const icons = {
+    success: 'M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z',
+    error:   'M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z',
+    loading: 'M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z'
+  };
+  document.getElementById('toast-icon').querySelector('path').setAttribute('d', icons[type] || icons.success);
+  document.getElementById('toast-msg').textContent = msg;
+  t.className = 'toast ' + type;
+  void t.offsetWidth;
+  t.classList.add('show');
+  if (type !== 'loading') setTimeout(() => t.classList.remove('show'), 4000);
+}
+
+// Format TZS
+function fmt(n) {
+  if (n === null || n === undefined || n === '') return '–';
+  return 'TZS ' + Number(n).toLocaleString('sw-TZ');
+}
+
+// Futa fomu
+function futaFomu() {
+  ['fld-jina','fld-maelezo','fld-kiasi'].forEach(id => document.getElementById(id).value = '');
+  ['fld-kitengo','fld-kategoria','fld-njia'].forEach(id => document.getElementById(id).selectedIndex = 0);
+  document.getElementById('fld-tarehe').valueAsDate = new Date();
+}
+
+// ══════════ HIFADHI MATUMIZI ══════════
+async function hifadhiMatumizi() {
+  const jina      = document.getElementById('fld-jina').value.trim();
+  const kitengo   = document.getElementById('fld-kitengo').value;
+  const tarehe    = document.getElementById('fld-tarehe').value;
+  const kiasi     = document.getElementById('fld-kiasi').value;
+  const kategoria = document.getElementById('fld-kategoria').value;
+  const njia      = document.getElementById('fld-njia').value;
+  const maelezo   = document.getElementById('fld-maelezo').value.trim();
+
+  if (!jina || !kitengo || !tarehe || !kiasi || !kategoria || !maelezo) {
+    toast('Tafadhali jaza sehemu zote zinazohitajika (*)', 'error'); return;
+  }
+  if (Number(kiasi) <= 0) { toast('Kiasi lazima kiwe zaidi ya sifuri', 'error'); return; }
+  if (SCRIPT_URL === 'WEKA_URL_YAKO_HAPA') {
+    toast('⚠️ URL ya Apps Script haijawekwa. Angalia maelezo ya mwisho.', 'error'); return;
+  }
+
+  const btn = document.getElementById('btn-hifadhi');
+  const spinner = document.getElementById('save-spinner');
+  const txt = document.getElementById('save-txt');
+  btn.disabled = true; spinner.style.display = 'block'; txt.textContent = 'Inatuma...';
+  toast('Inahifadhi...', 'loading');
+
+  try {
+    const params = new URLSearchParams({
+      action: 'hifadhi', jina, kitengo, tarehe, kiasi, kategoria, njia, maelezo
+    });
+    const res = await fetch(SCRIPT_URL + '?' + params.toString());
+    const data = await res.json();
+    if (data.status === 'ok') {
+      toast('✅ Imehifadhiwa katika Google Sheets!', 'success');
+      futaFomu();
+    } else {
+      toast('Hitilafu: ' + (data.message || 'Jaribu tena'), 'error');
+    }
+  } catch (e) {
+    toast('Tatizo la mtandao. Angalia URL ya script.', 'error');
+  } finally {
+    btn.disabled = false; spinner.style.display = 'none'; txt.textContent = 'Hifadhi katika Google Sheets';
+  }
+}
+
+// ══════════ PAKIA RIPOTI ══════════
+async function loadRipoti() {
+  if (SCRIPT_URL === 'WEKA_URL_YAKO_HAPA') {
+    toast('⚠️ URL ya Apps Script haijawekwa. Angalia maelezo.', 'error'); return;
+  }
+  const aina   = document.getElementById('rpt-aina').value;
+  const tarehe = document.getElementById('rpt-tarehe').value;
+  const mwaka  = document.getElementById('rpt-mwaka').value;
+
+  const spinner = document.getElementById('rpt-spinner');
+  const txt = document.getElementById('rpt-txt');
+  spinner.style.display = 'block'; txt.textContent = 'Inapakia...';
+  toast('Inapakia ripoti...', 'loading');
+
+  try {
+    const params = new URLSearchParams({ action: 'ripoti', aina, tarehe, mwaka });
+    const res = await fetch(SCRIPT_URL + '?' + params.toString());
+    const data = await res.json();
+
+    if (data.status !== 'ok') {
+      toast('Hitilafu: ' + (data.message || 'Jaribu tena'), 'error'); return;
+    }
+
+    // Summary tiles
+    document.getElementById('summary-tiles').style.display = '';
+    document.getElementById('sum-siku').textContent  = fmt(data.jumla_siku);
+    document.getElementById('sum-wiki').textContent  = fmt(data.jumla_wiki);
+    document.getElementById('sum-mwezi').textContent = fmt(data.jumla_mwezi);
+    document.getElementById('sum-yote').textContent  = fmt(data.jumla_yote);
+
+    // Table
+    const rows = data.rows || [];
+    document.getElementById('rpt-count').textContent = rows.length + ' rekodi';
+    const tbody = document.getElementById('rpt-tbody');
+    if (rows.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state">
+        <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+        <p>Hakuna matumizi katika kipindi hiki.</p></div></td></tr>`;
+    } else {
+      tbody.innerHTML = rows.map((r, i) => `
+        <tr>
+          <td>${i+1}</td>
+          <td class="td-date">${r.tarehe || ''}</td>
+          <td class="td-name">${r.jina || ''}</td>
+          <td><span class="td-cat">${r.kitengo || ''}</span></td>
+          <td>${r.kategoria || ''}</td>
+          <td>${r.maelezo || ''}</td>
+          <td>${r.njia || '–'}</td>
+          <td class="td-amount">${fmt(r.kiasi)}</td>
+        </tr>`).join('');
+    }
+    toast('Ripoti imepakiwa!', 'success');
+  } catch (e) {
+    toast('Tatizo la mtandao. Angalia URL ya script.', 'error');
+  } finally {
+    spinner.style.display = 'none'; txt.textContent = 'Pakia Ripoti';
+  }
+}
+</script>
+</body>
+</html>

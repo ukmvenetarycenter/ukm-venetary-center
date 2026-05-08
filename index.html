@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>UKM Kituo cha Mifugo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --forest:      #1b4332;
+      --forest-mid:  #2d6a4f;
+      --forest-soft: #52b788;
+      --amber:       #d4a017;
+      --amber-light: #f4c945;
+      --cream:       #fdf8f0;
+      --sand:        #e9dcc9;
+      --white:       #ffffff;
+      --text-dark:   #1c1c1c;
+      --text-mid:    #4a4a4a;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--text-dark);
+      overflow-x: hidden;
+    }
+
+    /* ══════════════ HEADER ══════════════ */
+    header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      background: rgba(27, 67, 50, 0.97);
+      backdrop-filter: blur(12px);
+      border-bottom: 2px solid var(--amber);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 36px; height: 82px;
+    }
+
+    .header-logo { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
+
+    .logo-circle {
+      width: 56px; height: 56px; border-radius: 50%;
+      border: 2.5px solid var(--amber); background: var(--forest-mid);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; box-shadow: 0 0 0 4px rgba(212,160,23,0.15);
+    }
+    .logo-circle svg { width: 38px; height: 38px; }
+
+    .header-info { flex: 1; text-align: center; padding: 0 20px; }
+    .header-info h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem; font-weight: 900; color: var(--amber);
+      letter-spacing: 0.05em; line-height: 1.2; text-transform: uppercase;
+    }
+    .header-info .tagline {
+      font-size: 0.66rem; color: rgba(255,255,255,0.7);
+      letter-spacing: 0.12em; margin-top: 3px;
+    }
+    .header-contacts {
+      display: flex; justify-content: center;
+      flex-wrap: wrap; gap: 18px; margin-top: 5px;
+    }
+    .header-contacts span {
+      font-size: 0.63rem; color: rgba(255,255,255,0.65);
+      display: flex; align-items: center; gap: 4px;
+    }
+    .header-contacts span svg { width: 11px; height: 11px; fill: var(--amber); }
+
+    .hamburger {
+      flex-shrink: 0; background: none;
+      border: 2px solid var(--amber); border-radius: 7px;
+      cursor: pointer; padding: 9px 11px;
+      display: flex; flex-direction: column; gap: 5px;
+      transition: background 0.25s;
+    }
+    .hamburger:hover { background: rgba(212,160,23,0.18); }
+    .hamburger span {
+      display: block; width: 24px; height: 2px;
+      background: var(--amber); border-radius: 2px;
+      transition: transform 0.35s, opacity 0.35s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ══════════════ SIDE NAV ══════════════ */
+    .side-nav {
+      position: fixed; top: 82px; right: 0;
+      width: 250px; height: calc(100vh - 82px);
+      background: var(--forest); border-left: 2px solid var(--amber);
+      transform: translateX(105%);
+      transition: transform 0.4s cubic-bezier(0.77,0,0.18,1);
+      z-index: 999; display: flex; flex-direction: column;
+      padding: 30px 0; box-shadow: -8px 0 32px rgba(0,0,0,0.35);
+    }
+    .side-nav.open { transform: translateX(0); }
+    .nav-label {
+      font-size: 0.6rem; color: var(--amber);
+      letter-spacing: 0.2em; text-transform: uppercase;
+      padding: 0 30px 18px;
+      border-bottom: 1px solid rgba(212,160,23,0.22); margin-bottom: 10px;
+    }
+    .side-nav a {
+      display: flex; align-items: center; gap: 14px;
+      padding: 15px 30px; color: rgba(255,255,255,0.82);
+      text-decoration: none; font-size: 0.88rem; font-weight: 500;
+      letter-spacing: 0.04em;
+      transition: background 0.2s, color 0.2s, padding-left 0.2s;
+      border-left: 3px solid transparent;
+    }
+    .side-nav a:hover {
+      background: rgba(212,160,23,0.1); color: var(--amber-light);
+      padding-left: 38px; border-left-color: var(--amber);
+    }
+    .side-nav a svg { width: 18px; height: 18px; fill: var(--amber); flex-shrink: 0; }
+
+    /* ══════════════ HERO ══════════════ */
+    .hero {
+      position: relative; margin-top: 82px;
+      height: calc(100vh - 82px); min-height: 520px; overflow: hidden;
+    }
+    .slide {
+      position: absolute; inset: 0;
+      background-size: cover; background-position: center;
+      opacity: 0; transform: scale(1.04);
+      transition: opacity 1.6s ease-in-out;
+    }
+    .slide.active {
+      opacity: 1; transform: scale(1);
+      transition: opacity 1.6s ease-in-out, transform 9s ease-out;
+    }
+    .slide-1 { background-image: url('https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?w=1600&q=80'); }
+    .slide-2 { background-image: url('https://images.unsplash.com/photo-1516467508483-a7212febe31a?w=1600&q=80'); }
+    .slide-3 { background-image: url('https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?w=1600&q=80'); }
+    .slide-4 { background-image: url('https://images.unsplash.com/photo-1508193638397-1c4234db14d8?w=1600&q=80'); }
+    .slide-5 { background-image: url('https://images.unsplash.com/photo-1596733430284-f7437764b1a9?w=1600&q=80'); }
+    .slide::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(10,28,18,0.72) 0%, rgba(27,67,50,0.45) 50%, rgba(10,28,18,0.30) 100%);
+    }
+    .slide::after {
+      content: ''; position: absolute; bottom: 0; left: 0;
+      width: 100%; height: 6px;
+      background: linear-gradient(90deg, var(--amber), var(--forest-soft), var(--amber));
+    }
+
+    .hero-content {
+      position: absolute; z-index: 10;
+      bottom: 13%; left: 7%; max-width: 600px;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(212,160,23,0.18); border: 1px solid rgba(212,160,23,0.5);
+      border-radius: 40px; padding: 6px 16px;
+      font-size: 0.68rem; letter-spacing: 0.16em;
+      color: var(--amber-light); text-transform: uppercase; margin-bottom: 16px;
+      opacity: 0; animation: fadeUp 0.8s 0.3s forwards;
+    }
+    .hero-badge::before {
+      content: ''; width: 6px; height: 6px; border-radius: 50%;
+      background: var(--amber-light); animation: pulse 1.8s infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity:1; transform:scale(1); }
+      50% { opacity:0.5; transform:scale(0.7); }
+    }
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.4rem, 5.5vw, 4.2rem); font-weight: 900;
+      color: var(--white); line-height: 1.08; margin-bottom: 20px;
+      opacity: 0; animation: fadeUp 0.9s 0.55s forwards;
+    }
+    .hero-title em { color: var(--amber-light); font-style: italic; }
+    .hero-divider {
+      width: 56px; height: 3px; background: var(--amber);
+      margin-bottom: 20px; border-radius: 2px;
+      opacity: 0; animation: fadeUp 0.7s 0.8s forwards;
+    }
+    .hero-desc {
+      font-size: 1rem; color: rgba(255,255,255,0.84);
+      line-height: 1.75; margin-bottom: 32px; max-width: 500px;
+      opacity: 0; animation: fadeUp 0.9s 0.95s forwards;
+    }
+    .hero-ctas {
+      display: flex; gap: 16px; flex-wrap: wrap;
+      opacity: 0; animation: fadeUp 0.8s 1.1s forwards;
+    }
+    .hero-cta-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 32px; background: var(--amber); color: var(--forest);
+      font-weight: 700; font-size: 0.84rem; letter-spacing: 0.1em;
+      text-transform: uppercase; border-radius: 4px; text-decoration: none;
+      transition: background 0.25s, transform 0.2s, box-shadow 0.25s;
+      box-shadow: 0 4px 20px rgba(212,160,23,0.4);
+    }
+    .hero-cta-primary:hover {
+      background: var(--amber-light); transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(212,160,23,0.5);
+    }
+    .hero-cta-secondary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 28px; background: transparent; color: var(--white);
+      font-weight: 600; font-size: 0.84rem; letter-spacing: 0.08em;
+      border: 1.5px solid rgba(255,255,255,0.5); border-radius: 4px;
+      text-decoration: none;
+      transition: border-color 0.25s, background 0.25s, color 0.25s;
+    }
+    .hero-cta-secondary:hover {
+      border-color: var(--amber); color: var(--amber-light);
+      background: rgba(212,160,23,0.08);
+    }
+
+    .slide-dots {
+      position: absolute; bottom: 32px; right: 7%;
+      display: flex; flex-direction: column; gap: 10px; z-index: 20;
+    }
+    .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: rgba(255,255,255,0.3); border: 1.5px solid var(--amber);
+      cursor: pointer; transition: background 0.3s, transform 0.3s, height 0.3s;
+    }
+    .dot.active { background: var(--amber); transform: scale(1.5); height: 18px; border-radius: 4px; }
+    .slide-counter {
+      position: absolute; bottom: 34px; left: 7%; z-index: 20;
+      font-size: 0.7rem; color: rgba(255,255,255,0.55); letter-spacing: 0.14em;
+    }
+    .slide-counter strong { color: var(--amber); font-size: 1rem; }
+
+    /* ══════════════ TAKWIMU ══════════════ */
+    .stats-strip {
+      background: var(--forest);
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      border-bottom: 2px solid var(--amber);
+    }
+    .stat-item {
+      text-align: center; padding: 28px 20px;
+      border-right: 1px solid rgba(255,255,255,0.08);
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem; font-weight: 900; color: var(--amber); line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.68rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: rgba(255,255,255,0.6); margin-top: 6px;
+    }
+
+    /* ══════════════ KADI ZA HABARI ══════════════ */
+    .info-section {
+      background: var(--cream); padding: 80px 7%;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;
+    }
+    .info-card {
+      background: var(--white); border-radius: 10px; padding: 36px 30px;
+      box-shadow: 0 2px 18px rgba(27,67,50,0.08);
+      border-top: 4px solid var(--amber);
+      transition: transform 0.3s, box-shadow 0.3s;
+      position: relative; overflow: hidden;
+    }
+    .info-card::before {
+      content: ''; position: absolute; bottom: -30px; right: -30px;
+      width: 100px; height: 100px; border-radius: 50%;
+      background: rgba(27,67,50,0.04);
+    }
+    .info-card:hover { transform: translateY(-5px); box-shadow: 0 10px 40px rgba(27,67,50,0.14); }
+    .card-icon { font-size: 2.2rem; margin-bottom: 14px; }
+    .info-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.18rem; color: var(--forest); margin-bottom: 10px;
+    }
+    .info-card p { font-size: 0.88rem; color: var(--text-mid); line-height: 1.75; }
+
+    /* ══════════════ HUDUMA ══════════════ */
+    .services-section { background: var(--sand); padding: 80px 7%; text-align: center; }
+    .section-eyebrow {
+      font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--forest-mid); font-weight: 600; margin-bottom: 10px;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      font-weight: 900; color: var(--forest); margin-bottom: 14px;
+    }
+    .section-desc {
+      max-width: 560px; margin: 0 auto 50px;
+      font-size: 0.95rem; color: var(--text-mid); line-height: 1.7;
+    }
+    .services-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 24px; text-align: left;
+    }
+    .service-card {
+      background: var(--white); border-radius: 10px; padding: 30px 26px;
+      box-shadow: 0 2px 14px rgba(27,67,50,0.07);
+      transition: transform 0.3s, box-shadow 0.3s;
+      border-bottom: 3px solid transparent;
+    }
+    .service-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 36px rgba(27,67,50,0.13);
+      border-bottom-color: var(--forest-soft);
+    }
+    .service-icon { font-size: 2rem; margin-bottom: 14px; }
+    .service-card h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem; color: var(--forest); margin-bottom: 8px;
+    }
+    .service-card p { font-size: 0.84rem; color: var(--text-mid); line-height: 1.65; }
+
+    /* ══════════════ CHINI ══════════════ */
+    footer {
+      background: var(--forest); color: rgba(255,255,255,0.55);
+      text-align: center; padding: 26px; font-size: 0.78rem;
+      border-top: 3px solid var(--amber); letter-spacing: 0.03em;
+    }
+    footer strong { color: var(--amber); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .nav-backdrop {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+      z-index: 998; opacity: 0; pointer-events: none; transition: opacity 0.35s;
+    }
+    .nav-backdrop.show { opacity: 1; pointer-events: all; }
+
+    @media (max-width: 900px) {
+      .services-grid { grid-template-columns: 1fr 1fr; }
+      .stats-strip { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 680px) {
+      .header-contacts { display: none; }
+      .header-info h1 { font-size: 1rem; }
+      .info-section { grid-template-columns: 1fr; }
+      .services-grid { grid-template-columns: 1fr; }
+      .stats-strip { grid-template-columns: repeat(2, 1fr); }
+      .side-nav { width: 220px; }
+      .hero-ctas { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════ KICHWA ═══════════════════ -->
+<header>
+  <div class="header-logo">
+    <div class="logo-circle">
+      <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="30" cy="30" r="28" fill="#2d6a4f"/>
+        <rect x="24" y="10" width="12" height="40" rx="4" fill="#d4a017"/>
+        <rect x="10" y="24" width="40" height="12" rx="4" fill="#d4a017"/>
+        <circle cx="18" cy="18" r="4" fill="white" opacity="0.9"/>
+        <circle cx="42" cy="18" r="4" fill="white" opacity="0.9"/>
+        <circle cx="18" cy="42" r="4" fill="white" opacity="0.9"/>
+        <circle cx="42" cy="42" r="4" fill="white" opacity="0.9"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="header-info">
+    <h1>UKM Kituo cha Mifugo</h1>
+    <div class="tagline">Huduma za Kitaalamu za Mifugo &amp; Dawa za Kilimo &nbsp;•&nbsp; Ruvuma, Tanzania</div>
+    <div class="header-contacts">
+      <span>
+        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        ukmvenetarycenter@gmail.com
+      </span>
+      <span>
+        <svg viewBox="0 0 24 24"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24 11.47 11.47 0 003.58.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.58a1 1 0 01-.24 1.01l-2.21 2.2z"/></svg>
+        +255 626 838 466
+      </span>
+      <span>
+        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"/></svg>
+        Mtaa wa Nida, Songea · S.L.P 3333
+      </span>
+    </div>
+  </div>
+
+  <button class="hamburger" id="menuBtn" aria-label="Fungua Menyu">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<!-- ═══════════════════ MENYU YA UPANDE ═══════════════════ -->
+<div class="nav-backdrop" id="backdrop"></div>
+<nav class="side-nav" id="sideNav">
+  <div class="nav-label">Urambazaji</div>
+  <a href="x.html">
+    <svg viewBox="0 0 24 24"><path d="M20 6h-2.18A3 3 0 0015 4H9a3 3 0 00-2.82 2H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V8a2 2 0 00-2-2zM9 6h6v2H9V6zm11 14H4V8h2v2h2V8h8v2h2V8h2v12z"/></svg>
+    Hifadhi ya Bidhaa
+  </a>
+  <a href="mm1.html">
+    <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-1.99.9-1.99 2S15.9 22 17 22s2-.9 2-2-.9-2-2-2zm-9.83-3.25A2 2 0 009 17h8l1.48-2.96A1 1 0 0017.56 13H7.21l-.94-2H3V9h1.73L7 15.75zM1 1v2h2l3.6 7.59L5.25 13a2 2 0 001.75 2.95H19v-2H7.42a.25.25 0 01-.22-.38L8.1 12h7.45c.75 0 1.41-.41 1.75-1.03L20.7 5H5.21L4.27 3H1z"/></svg>
+    Matumizi
+  </a>
+  <a href="madeni.html">
+    <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+    Madeni
+  </a>
+<!--  <a href="sells.html">
+    <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+    Mauzo
+  </a>
+  <a href="report.html">
+    <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
+    Ripoti
+  </a> -->
+</nav>
+
+<!-- ═══════════════════ SLAIDI KUU ═══════════════════ -->
+<section class="hero">
+  <div class="slide slide-1 active"></div>
+  <div class="slide slide-2"></div>
+  <div class="slide slide-3"></div>
+  <div class="slide slide-4"></div>
+  <div class="slide slide-5"></div>
+
+  <div class="hero-content">
+    <div class="hero-badge">Huduma za Kuaminika Tangu 2018</div>
+    <h2 class="hero-title">
+      Mifugo Yako.<br>Utaalamu <em>Wetu</em>.
+    </h2>
+    <div class="hero-divider"></div>
+    <p class="hero-desc">
+      UKM Kituo cha Mifugo kinatoa huduma kamili za mifugo na bidhaa bora za agrovet kwa ng'ombe, mbuzi, kondoo na wanyama wengine katika mkoa wote wa Ruvuma — kutoka ukaguzi wa kawaida hadi matibabu ya dharura.
+    </p>
+    <div class="hero-ctas">
+    <!--  <a href="shop.html" class="hero-cta-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+        Angalia Huduma
+      </a>
+      <a href="customer.html" class="hero-cta-secondary">
+        Wasiliana Nasi →
+      </a>-->
+    </div>
+  </div>
+
+  <div class="slide-counter">
+    <strong id="slideNum">1</strong> / 5
+  </div>
+
+  <div class="slide-dots">
+    <div class="dot active" data-i="0"></div>
+    <div class="dot" data-i="1"></div>
+    <div class="dot" data-i="2"></div>
+    <div class="dot" data-i="3"></div>
+    <div class="dot" data-i="4"></div>
+  </div>
+</section>
+
+<!-- ═══════════════════ TAKWIMU ═══════════════════ -->
+<div class="stats-strip">
+  <div class="stat-item">
+    <div class="stat-num">2,400+</div>
+    <div class="stat-label">Wanyama Waliotibiwa</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">500+</div>
+    <div class="stat-label">Wakulima Waliohudumika</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">7+</div>
+    <div class="stat-label">Miaka ya Uzoefu</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">6 Siku</div>
+    <div class="stat-label">Jua – Jumamosi Wazi</div>
+  </div>
+</div>
+
+<!-- ═══════════════════ KADI ZA HABARI ═══════════════════ -->
+<section class="info-section">
+  <div class="info-card">
+    <div class="card-icon">📍</div>
+    <h3>Mahali Tulipo</h3>
+    <p>Mtaa wa Nida, Songea<br>Mkoa wa Ruvuma, Tanzania<br>S.L.P. 3333, Songea</p>
+  </div>
+  <div class="info-card">
+    <div class="card-icon">📞</div>
+    <h3>Wasiliana Nasi</h3>
+    <p>Simu: <strong>+255 626 838 466</strong><br>Barua pepe: ukmvenetarycenter@gmail.com<br>Wazi Jua – Jumamosi · Saa 2 – 12 Usiku</p>
+  </div>
+  <div class="info-card">
+    <div class="card-icon">🐾</div>
+    <h3>Huduma Zetu</h3>
+    <p>Matibabu ya mifugo, dawa za wanyama na bidhaa za agrovet, usimamizi wa mifugo, chanjo, na huduma za dharura.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════ HUDUMA ═══════════════════ -->
+<section class="services-section">
+  <div class="section-eyebrow">Tunachotoa</div>
+  <h2 class="section-title">Huduma Kamili za Afya ya Wanyama</h2>
+  <p class="section-desc">Kuanzia kinga hadi matibabu ya dharura, tunasaidia mifugo yenye afya na mashamba yanayostawi katika mkoa wote wa Ruvuma.</p>
+
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon">🐄</div>
+      <h4>Matibabu ya Mifugo</h4>
+      <p>Uchunguzi, utambuzi wa magonjwa na matibabu ya kitaalamu kwa ng'ombe, mbuzi, kondoo na nguruwe na madaktari wenye ujuzi.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">💊</div>
+      <h4>Dawa na Bidhaa za Agrovet</h4>
+      <p>Aina mbalimbali za dawa bora za mifugo, dawa za minyoo, vitamini na virutubisho vinapatikana katika duka letu la agrovet.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">💉</div>
+      <h4>Mipango ya Chanjo</h4>
+      <p>Huduma za chanjo zilizopangwa kulinda mifugo yako dhidi ya ugonjwa wa miguu na midomo, kimeta, brucellosis na zaidi.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🐕</div>
+      <h4>Huduma kwa Wanyama wa Nyumbani</h4>
+      <p>Huduma za mifugo kwa mbwa, paka na wanyama wengine wa nyumbani ikiwemo ukaguzi, chanjo na matibabu.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🌾</div>
+      <h4>Pembejeo za Kilimo</h4>
+      <p>Mbegu bora, mbolea na dawa za mazao ya kinga ili kusaidia mzunguko kamili wa kilimo shambani kwako.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🚨</div>
+      <h4>Huduma za Dharura</h4>
+      <p>Jibu la haraka kwa dharura za mifugo. Piga simu wakati wowote — afya ya wanyama wako ndiyo kipaumbele chetu.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ CHINI YA UKURASA ═══════════════════ -->
+<footer>
+  &copy; 2025 <strong>UKM Kituo cha Mifugo</strong> &nbsp;·&nbsp; Mtaa wa Nida, Songea, Ruvuma &nbsp;·&nbsp; +255 626 838 466 &nbsp;·&nbsp; ukmvenetarycenter@gmail.com
+</footer>
+
+<script>
+  const btn      = document.getElementById('menuBtn');
+  const nav      = document.getElementById('sideNav');
+  const backdrop = document.getElementById('backdrop');
+  const slideNum = document.getElementById('slideNum');
+
+  function toggleNav() {
+    btn.classList.toggle('open');
+    nav.classList.toggle('open');
+    backdrop.classList.toggle('show');
+  }
+  btn.addEventListener('click', toggleNav);
+  backdrop.addEventListener('click', toggleNav);
+
+  const slides = document.querySelectorAll('.slide');
+  const dots   = document.querySelectorAll('.dot');
+  let current  = 0, timer;
+
+  function goTo(n) {
+    slides[current].classList.remove('active');
+    dots[current].classList.remove('active');
+    current = (n + slides.length) % slides.length;
+    slides[current].classList.add('active');
+    dots[current].classList.add('active');
+    slideNum.textContent = current + 1;
+  }
+
+  function next() { goTo(current + 1); }
+
+  function startTimer() {
+    clearInterval(timer);
+    timer = setInterval(next, 5500);
+  }
+
+  dots.forEach(d => d.addEventListener('click', () => {
+    goTo(+d.dataset.i);
+    startTimer();
+  }));
+
+  startTimer();
+</script>
+</body>
+</html>

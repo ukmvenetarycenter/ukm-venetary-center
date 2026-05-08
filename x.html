@@ -372,6 +372,15 @@ Data yote imehifadhiwa kwenye Google Sheets – Mauzo, Bidhaa, Ripoti zinasomwa 
 <label>Mteja</label>
 <select id="pos-customer"><option value="">-- Mteja Asiye na Akaunti --</option></select>
 </div>
+<!-- DATE OF ISSUE FIELD -->
+<div class="form-group mb-3">
+  <label>📅 Tarehe ya Uuzaji (Date of Issue)</label>
+  <div style="display:flex;align-items:center;gap:10px">
+    <input type="date" id="pos-sale-date" oninput="updateSaleDateStatus()" style="flex:1">
+    <span id="sale-date-badge" class="badge badge-green" style="white-space:nowrap;font-size:.75rem">● Leo</span>
+  </div>
+  <div id="sale-date-note" style="font-size:.75rem;color:var(--muted);margin-top:3px"></div>
+</div>
 <!-- MODIFICATION 3: Note about flexible pricing -->
 <div class="price-flex-bar">
 💡 <strong>Bei inaweza kubadilishwa:</strong> Bonyeza bei yoyote kwenye basket ili kuibadilisha. Stock itapungua bila kujali bei uliyoweka.
@@ -943,7 +952,7 @@ function showPage(name) {
   document.getElementById('nav-' + name).classList.add('active');
   document.getElementById('topbar-title').textContent = pageTitles[name];
   if (name === 'dashboard') updateDashboard();
-  if (name === 'pos') { renderPosProducts(); renderCustomerSelects(); }
+  if (name === 'pos') { renderPosProducts(); renderCustomerSelects(); initSaleDate(); }
   if (name === 'products') renderProducts();
   if (name === 'customers') renderCustomers();
   if (name === 'reports') {
@@ -1175,6 +1184,63 @@ function clearProductForm() {
 // POS — MODIFICATION 2 & 3: Flexible price input per cart item
 // Stock reduces by qty regardless of price charged
 // ============================================================
+// ============================================================
+// DATE OF ISSUE — POS Page
+// ============================================================
+function initSaleDate() {
+  const el = document.getElementById('pos-sale-date');
+  if (!el) return;
+  const today = new Date().toISOString().slice(0, 10);
+  el.value = today;
+  updateSaleDateStatus();
+}
+
+function updateSaleDateStatus() {
+  const el = document.getElementById('pos-sale-date');
+  const badge = document.getElementById('sale-date-badge');
+  const note = document.getElementById('sale-date-note');
+  if (!el || !badge) return;
+  const val = el.value;
+  if (!val) {
+    badge.textContent = '● Tarehe Haijachaguliwa';
+    badge.className = 'badge badge-amber';
+    if (note) note.textContent = '';
+    return;
+  }
+  const today = new Date().toISOString().slice(0, 10);
+  const chosen = new Date(val);
+  const todayDate = new Date(today);
+  const diffMs = chosen - todayDate;
+  const diffDays = Math.round(diffMs / 86400000);
+
+  if (diffDays === 0) {
+    badge.textContent = '● Leo (Sasa Hivi)';
+    badge.className = 'badge badge-green';
+    if (note) note.textContent = '';
+  } else if (diffDays < 0) {
+    const absDays = Math.abs(diffDays);
+    badge.textContent = '● Tarehe Iliyopita';
+    badge.className = 'badge badge-amber';
+    if (note) note.textContent = `⚠️ Siku ${absDays} zilizopita (Mauzo ya nyuma)`;
+    note.style.color = '#92400e';
+  } else {
+    badge.textContent = '● Tarehe ya Baadaye';
+    badge.className = 'badge badge-red';
+    if (note) note.textContent = `⚠️ Siku ${diffDays} zijazo — Tarehe haiwezi kuwa ya mbele!`;
+    note.style.color = 'var(--red)';
+  }
+}
+
+function getSaleDate() {
+  const el = document.getElementById('pos-sale-date');
+  if (!el || !el.value) return new Date().toISOString();
+  // Combine selected date with current time
+  const datePart = el.value;
+  const now = new Date();
+  const timePart = now.toTimeString().slice(0, 8);
+  return new Date(`${datePart}T${timePart}`).toISOString();
+}
+
 function renderPosProducts() {
   const q = (document.getElementById('pos-search')?.value || '').toLowerCase();
   const prods = state.products.filter(p => p.qty > 0 && (!q || p.name.toLowerCase().includes(q)));
@@ -1317,6 +1383,17 @@ function clearCart() {
 // MODIFICATION 2: completeSale — stock reduces by qty REGARDLESS of price charged
 function completeSale() {
   if (!state.cart.length) { toast('Basket iko tupu!', 'error'); return; }
+
+  // Validate date of issue
+  const saleDateEl = document.getElementById('pos-sale-date');
+  if (saleDateEl && saleDateEl.value) {
+    const today = new Date().toISOString().slice(0, 10);
+    if (saleDateEl.value > today) {
+      toast('❌ Tarehe ya uuzaji haiwezi kuwa ya baadaye! Rekebisha tarehe.', 'error');
+      return;
+    }
+  }
+
   const total = state.cart.reduce((a, c) => a + c.customPrice * c.qty, 0);
   const paid = parseFloat(document.getElementById('pos-paid').value) || 0;
   // MODIFICATION 3: Allow any paid amount — only warn, don't block
@@ -1330,7 +1407,7 @@ function completeSale() {
 
   const sale = {
     id: uid(),
-    date: new Date().toISOString(),
+    date: getSaleDate(),
     items: state.cart.map(c => ({
       id: c.id,
       name: c.name,
@@ -1365,6 +1442,7 @@ function completeSale() {
   save('sales');
   showReceipt(sale);
   clearCart();
+  initSaleDate(); // Reset date of issue to today after sale
   document.getElementById('pos-paid').value = '';
   updateDashboard();
 }
@@ -1372,11 +1450,20 @@ function completeSale() {
 function showReceipt(sale) {
   const shopName = state.shopInfo.name || 'Baraka Vet Shop';
   const hasDiscount = sale.totalDiscount && sale.totalDiscount > 0;
+
+  // Check if sale date is past
+  const saleDay = sale.date ? sale.date.slice(0, 10) : '';
+  const today = new Date().toISOString().slice(0, 10);
+  const isPast = saleDay && saleDay < today;
+  const issueDateLabel = isPast
+    ? `<span style="background:#fef3c7;color:#92400e;font-size:.72rem;font-weight:700;padding:2px 7px;border-radius:4px;margin-left:6px">📅 MAUZO YA NYUMA</span>`
+    : `<span style="background:var(--green-pale);color:var(--green);font-size:.72rem;font-weight:700;padding:2px 7px;border-radius:4px;margin-left:6px">✅ LEO</span>`;
+
   document.getElementById('receipt-content').innerHTML = `
     <div style="text-align:center;border-bottom:2px dashed var(--border);padding-bottom:14px;margin-bottom:14px">
       <div style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;color:var(--navy)">${shopName}</div>
       <div style="color:var(--muted);font-size:.8rem">${state.shopInfo.phone} · ${state.shopInfo.email}</div>
-      <div style="color:var(--muted);font-size:.78rem;margin-top:4px">${formatDateTimeSwahili(sale.date)}</div>
+      <div style="color:var(--muted);font-size:.78rem;margin-top:4px">📅 Tarehe ya Uuzaji: <strong>${formatDateTimeSwahili(sale.date)}</strong> ${issueDateLabel}</div>
     </div>
     <div style="margin-bottom:10px"><strong>Mteja:</strong> ${sale.customerName}</div>
     <table style="width:100%;border-collapse:collapse;margin-bottom:14px">
